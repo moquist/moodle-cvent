@@ -1,0 +1,102 @@
+<?php $yesno = array('0'=>get_string('no'), '1'=>get_string('yes')); ?>
+
+<p style="text-align:center"><?php print $apicalls_remaining; ?></p>
+
+<table cellspacing="0" cellpadding="5" border="0" class="boxaligncenter">
+    <tr>
+        <th colspan="2" scope="col">
+            <?php print_string("server_settings", "enrol_cvent") ?>
+        </th>
+    </tr>
+
+    <tr>
+        <td align="right">enrol_cvent_account_number:</td>
+        <td>
+            <?php if (!isset($frm->enrol_cvent_account_number)) { $frm->enrol_cvent_account_number = ''; } ?>
+            <input size="15" type="text" name="enrol_cvent_account_number" value="<?php p($frm->enrol_cvent_account_number) ?>" />
+        </td>
+        <td>
+            <?php  print_string("enrol_cvent_account_number", "enrol_cvent") ?>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td align="right">enrol_cvent_username:</td>
+        <td>
+            <?php if (!isset($frm->enrol_cvent_username)) { $frm->enrol_cvent_username = ''; } ?>
+            <input size="15" type="text" name="enrol_cvent_username" value="<?php p($frm->enrol_cvent_username) ?>" />
+        </td>
+        <td>
+            <?php  print_string("enrol_cvent_username", "enrol_cvent") ?>
+        </td>
+    </tr>
+
+
+    <tr>
+        <td align="right">enrol_cvent_password:</td>
+        <td>
+            <?php if (!isset($frm->enrol_cvent_password)) { $frm->enrol_cvent_password = ''; } ?>
+            <input size="15" type="password" name="enrol_cvent_password" value="<?php p($frm->enrol_cvent_password) ?>" />
+        </td>
+        <td>
+            <?php  print_string("enrol_cvent_password", "enrol_cvent") ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td align="right">enrol_cvent_searchdays:</td>
+        <td>
+            <?php if (!isset($frm->enrol_cvent_searchdays)) { $frm->enrol_cvent_searchdays = 180; } ?>
+            <input size="15" type="text" name="enrol_cvent_searchdays" value="<?php p($frm->enrol_cvent_searchdays) ?>" />
+        </td>
+        <td>
+            <?php  print_string("enrol_cvent_searchdays", "enrol_cvent", $frm->enrol_cvent_searchdays_default) ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td align="right">enrol_cvent_search_location:</td>
+        <td>
+            <?php if (!isset($frm->enrol_cvent_search_location)) { $frm->enrol_cvent_search_location = 180; } ?>
+            <input size="15" type="text" name="enrol_cvent_search_location" value="<?php p($frm->enrol_cvent_search_location) ?>" />
+        </td>
+        <td>
+            <?php  print_string("enrol_cvent_search_location", "enrol_cvent") ?>
+        </td>
+    </tr>
+
+    <tr>
+        <th colspan="2" scope="col">
+            <?php print_string("enrol_cvent_autocreate_header", "enrol_cvent") ?>
+        </th>
+    </tr>
+    <tr>
+        <td align="right">enrol_cvent_autocreate_courses:</td>
+        <td>
+            <?php
+                choose_from_menu($yesno, "enrol_cvent_autocreate_courses", $frm->enrol_cvent_autocreate_courses, "");
+                if (isset($err["enrol_cvent_autocreate_courses"])) formerr($err["enrol_cvent_autocreate_courses"]); 
+            ?>
+        </td>
+        <td>
+            <?php  print_string("enrol_cvent_autocreate_courses", "enrol_cvent") ?>
+        </td>
+    </tr>
+
+    <tr>
+        <td align="right">enrol_cvent_autocreate_category:</td>
+        <td>
+            <?php
+                $displaylist = array();
+                $parentlist = array();
+                make_categories_list($displaylist, $parentlist);
+                choose_from_menu($displaylist, "enrol_cvent_autocreate_category", $frm->enrol_cvent_autocreate_category, "");
+                if (isset($err["enrol_cvent_autocreate_category"])) formerr($err["enrol_cvent_autocreate_category"]);
+            ?>
+            </td><td>
+            <?php  print_string("enrol_cvent_autocreate_category", "enrol_cvent") ?>
+        </td>
+    </tr>
+
+</table>

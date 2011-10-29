@@ -1,0 +1,49 @@
+Moodle-Cvent
+
+Supported Moodle versions:
+    * 1.9.10+ (Build: 20101117)
+
+Introduction:
+    If you're a Cvent customer and you've got access to their integration API,
+    this enrollment module allows you to get new and updated user accounts and
+    enrollments from Cvent.
+
+    The code is designed to make the best possible use of their API, attempting
+    to get all (but only) the necessary data to keep moodle up-to-date while
+    using the smallest possible number of API calls. (Cvent limits the number of
+    calls that can be made within a 24-hour period.)
+
+    This has been developed specifically for one client, but the hope is that
+    others will also find this to be useful. Comments, questions, and patches
+    are welcome!
+
+Installation:
+    Copy the moodle-1.9/enrol/cvent/ directory into your own moodle, and then go
+    to http://yourmoodle.tld/admin/ in your browser. This will create the DB
+    tables. Then go to http://yourmoodle.tld/admin/enrol.php to enable the Cvent
+    module and configure its settings.
+
+    You MUST be a Cvent customer with access to their API service, because in
+    the settings page you'll need to enter the authentication information
+    (username, account number, and password) they give you for their API.
+
+Synchronizing:
+    You'll need to set up a cron job (or Scheduled Task) to regularly run this
+    script in your moodle installation: enrol/cvent/enrol_cvent_sync.php
+
+    Each run of that script should use no more than 8 Cvent API calls, unless
+    you have more than 10k updates in between two runs of this script.
+
+Testing:
+    Just to be sure the basic connection works, you can execute the following on
+    the command line:
+        php enrol/cvent/test.php 
+
+    Without any arguments, that script will just attempt to make a connection to
+    Cvent. The script will tell you whether the connection was successful.
+
+    test.php can do other things, too, and it's intended that developers will
+    monkey with it as needed for debugging.
+
+Matt Oquist <moquist@majen.net>
+Sat Oct 29 15:33:16 EDT 2011
