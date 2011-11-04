@@ -2,7 +2,7 @@
 
 $string['enrolname'] = 'Cvent';
 $string['server_settings'] = 'Cvent Settings';
-$string['description'] = "You can use Cvent (cvent.com) to manage your enrolments.";
+$string['description'] = "You can use Cvent (cvent.com) to manage your enrolments. (You must be a customer of Cvent and have API access in order to use this plugin.)";
 $string['enrol_cvent_account_number'] = "Your Cvent account ID. (You must receive this value from Cvent.)";
 $string['enrol_cvent_username'] = "Your Cvent account username. (You must receive this value from Cvent.)";
 $string['enrol_cvent_password'] = "Your Cvent account password.";
@@ -22,6 +22,7 @@ $string['headingcallsremaining'] = "API calls remaining";
 $string['viewlog'] = "view log";
 $string['couldnotinit'] = "Cvent could not be initialized; the number of API calls remaining today is unknown.";
 $string['youmustsetdatetimezone'] = "Error: date.timezone is not set in your php.ini. You must set this parameter before the Cvent enrolment plugin can work.";
+$string['manualsync'] = "Synchronize now";
 
 ?>
 

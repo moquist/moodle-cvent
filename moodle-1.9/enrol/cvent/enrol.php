@@ -116,6 +116,9 @@ class enrolment_plugin_cvent {
             $apicalls_remaining .= " <a target=\"_blank\" href=\"$CFG->wwwroot/enrol/cvent/apicalls_history.php\">(" . get_string('viewlog', 'enrol_cvent') . ")</a>";
         }
 
+        $strmanualsunc = get_string('manualsync', 'enrol_cvent');
+        $manualsync = "<a target=\"_blank\" href=\"$CFG->wwwroot/enrol/cvent/enrol_cvent_sync.php\">$strmanualsunc</a>";
+
         foreach ($this->config_vars as $var => $default) {
             if (!isset($frm->$var)) {
                 $frm->$var = $default;
@@ -164,48 +167,6 @@ class enrolment_plugin_cvent {
         $login = new Login(array('AccountNumber' => $CFG->enrol_cvent_account_number, 'UserName' => $CFG->enrol_cvent_username, 'Password' => $CFG->enrol_cvent_password));
         $this->cvent->Login($login);
         return $this->cvent->DescribeGlobal(new DescribeGlobal());
-    }
-
-    /**
-     * Ensure that the given CVent Contact object has a corresponding Moodle 
-     * user account.
-     *
-     * @param object $contact A CVent Contact object
-     * @return
-     */
-    private function auth_ensure_user($contact) {
-        global $CFG;
-        if (!strlen($contact->emailaddress)) {
-            print "$contact->lastname, $contact->firstname ($contact->homephone) has no email address, skipping account creation/update\n";
-        }
-        $user = (object)array(
-            'auth' => 'manual',
-            'confirmed' => 1,
-            'mnethostid' => $CFG->mnet_localhost_id,
-            'username' => $contact->emailaddress,
-            'firstname' => $contact->firstname,
-            'lastname' => $contact->lastname,
-            'email' => $contact->emailaddress,
-            'lang' => 'en_utf8', # default can be changed by user
-            'address' => $contact->homeaddress1,
-            'city' => $contact->homecity,
-            'country' => $contact->homecountrycode,
-            'idnumber' => isset($contact->contactid) ? $contact->contactid : '',
-        );
-        if ($rec = get_record('user', 'username', $user->username)) {
-            $user->id = $rec->id;
-            update_record('user', $user);
-        } else {
-            # We need to create this user.
-            $user->password = hash_internal_user_password($contact->emailaddress);
-            $user->id = insert_record('user', $user);
-            $userpref = insert_record('user_preferences', (object)array(
-                'userid' => $user->id,
-                'name' => 'auth_forcepasswordchange',
-                'value' => 1,
-            ));
-        }
-        return $user;
     }
 
     private function ensure_course($event) {
@@ -372,7 +333,6 @@ class enrolment_plugin_cvent {
                 'Value' => $search_location,
             ));
         }
-        debugging(print_r($filters, true));
 
         $searchresults = $this->cvent->Search(
             new Search(array(
@@ -587,7 +547,7 @@ class enrolment_plugin_cvent {
             $guestdetail->homeaddress1 = $guestdetail->address1;
             $guestdetail->homecity = $guestdetail->city;
             $guestdetail->homecountrycode = $guestdetail->countrycode;
-            $user = $this->auth_ensure_user($guestdetail);
+            $user = cvent_ensure_user($guestdetail);
             # The enrolment will be handled later by setup_enrolments()
         }
     }
@@ -686,12 +646,53 @@ class enrolment_plugin_cvent {
                 print "Inserting contact ($contact->contactid)\n";
                 $contact->id = insert_record('cvent_contact', $contact);
             }
-            $user = $this->auth_ensure_user($contact);
+            $user = cvent_ensure_user($contact);
             # Enrolments for this user will be handled later by setup_enrolments()
         }
     }
 
 } // end of class
 
+/**
+ * Ensure that the given CVent Contact object has a corresponding Moodle 
+ * user account.
+ *
+ * @param object $contact A CVent Contact object
+ * @return
+ */
+function cvent_ensure_user($contact) {
+    global $CFG;
+    if (!strlen($contact->emailaddress)) {
+        print "$contact->lastname, $contact->firstname ($contact->homephone) has no email address, skipping account creation/update\n";
+    }
+    $user = (object)array(
+        'auth' => 'manual',
+        'confirmed' => 1,
+        'mnethostid' => $CFG->mnet_localhost_id,
+        'username' => $contact->emailaddress,
+        'firstname' => $contact->firstname,
+        'lastname' => $contact->lastname,
+        'email' => $contact->emailaddress,
+        'lang' => 'en_utf8', # default can be changed by user
+        'address' => $contact->homeaddress1,
+        'city' => $contact->homecity,
+        'country' => $contact->homecountrycode,
+        'idnumber' => isset($contact->contactid) ? $contact->contactid : '',
+    );
+    if ($rec = get_record('user', 'username', $user->username)) {
+        $user->id = $rec->id;
+        update_record('user', $user);
+    } else {
+        # We need to create this user.
+        $user->password = hash_internal_user_password($contact->emailaddress);
+        $user->id = insert_record('user', $user);
+        $userpref = insert_record('user_preferences', (object)array(
+            'userid' => $user->id,
+            'name' => 'auth_forcepasswordchange',
+            'value' => 1,
+        ));
+    }
+    return $user;
+}
 
 ?>
