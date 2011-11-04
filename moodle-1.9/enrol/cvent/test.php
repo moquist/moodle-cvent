@@ -47,7 +47,10 @@ function main($argv) {
 
     try {
         print_string("attemptinginit", 'enrol_cvent');
-        $apicalls_log = $enrol->init_cvent();
+        if (!$apicalls_log = $enrol->init_cvent()) {
+            print_string('initerrorunknown', 'enrol_cvent');
+            exit;
+        }
     } catch (Exception $e) {
         if ($e->faultstring == 'INVALID_LOGIN') {
             print_string($e->faultstring, 'enrol_cvent');

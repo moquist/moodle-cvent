@@ -13,6 +13,7 @@ $string['enrol_cvent_autocreate_courses'] = "Courses can be created automaticall
 $string['enrol_cvent_autocreate_category'] = "The category for auto-created courses.";
 $string['INVALID_LOGIN'] = "Cvent returned 'INVALID_LOGIN'. Please check your configured Cvent account number, username, and password.\n";
 $string['attemptinginit'] = "Attempting to authenticate to Cvent...\n";
+$string['initerrorunknown'] = "Unknown error authenticating to Cvent. Perhaps you want to turn on Moodle debugging and try again.\n";
 $string['initsuccess'] = "Successfully authenticated to Cvent!\n";
 $string['setup_enrolments'] = "Setting up enrolments for \$a...\n";
 $string['apicallsremaining'] = "API calls remaining today until Midnight, Eastern time: \$a\n";
