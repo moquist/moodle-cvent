@@ -5,7 +5,7 @@
     require_once("$CFG->libdir/accesslib.php");
 
     if (!has_capability('moodle/site:doanything', get_context_instance(CONTEXT_SYSTEM, SITEID)) and PHP_SAPI != 'cli') {
-        error_log("Must be admin or must run from CLI!");
+        print "Must be admin or must run from CLI!";
         exit;
     }
 
@@ -26,5 +26,8 @@
 
     $enrol = new enrolment_plugin_cvent();
 
+    if (PHP_SAPI != 'cli') {
+        print "<p><big><big><a target=\"_blank\" href=\"$CFG->wwwroot/enrol/cvent/apicalls_history.php\">(" . get_string('clicktoseelogafter', 'enrol_cvent') . ")</a></big></big></p>";
+    }
     $enrol->sync_enrolments();
 ?>

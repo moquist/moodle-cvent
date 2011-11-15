@@ -15,7 +15,7 @@ $string['INVALID_LOGIN'] = "Cvent returned 'INVALID_LOGIN'. Please check your co
 $string['attemptinginit'] = "Attempting to authenticate to Cvent...\n";
 $string['initerrorunknown'] = "Unknown error authenticating to Cvent. Perhaps you want to turn on Moodle debugging and try again.\n";
 $string['initsuccess'] = "Successfully authenticated to Cvent!\n";
-$string['setup_enrolments'] = "Setting up enrolments for \$a...\n";
+$string['setup_enrolments'] = "Setting up enrolments for \$a...<br />\n";
 $string['apicallsremaining'] = "API calls remaining today until Midnight, Eastern time: \$a\n";
 $string['headingcallsmade'] = "API calls made";
 $string['headingcallsremaining'] = "API calls remaining";
@@ -23,6 +23,7 @@ $string['viewlog'] = "view log";
 $string['couldnotinit'] = "Cvent could not be initialized; the number of API calls remaining today is unknown.";
 $string['youmustsetdatetimezone'] = "Error: date.timezone is not set in your php.ini. You must set this parameter before the Cvent enrolment plugin can work.";
 $string['manualsync'] = "Synchronize now";
+$string['clicktoseelogafter'] = "Click here to see the API calls log after this page is finished loading.";
 
 ?>
 

@@ -94,7 +94,7 @@ class enrolment_plugin_cvent {
                 $this->setup_enrolments($user);
             }
         } catch (Exception $e) {
-            print "Exception SOAP info: " . $this->get_soap_trace() . "\n";
+            print "Exception SOAP info: " . $this->get_soap_trace() . "<br />\n";
             throw $e;
         }
         return true;
@@ -112,6 +112,7 @@ class enrolment_plugin_cvent {
         if (!strlen($apicalls_remaining)) {
             $apicalls_remaining = get_string('couldnotinit', 'enrol_cvent');
         } else {
+            $apicalls_made = get_string('apicallsmade', 'enrol_cvent', $this->apicalls_log()->calls_made);
             $apicalls_remaining = get_string('apicallsremaining', 'enrol_cvent', $this->apicalls_log()->calls_remaining);
             $apicalls_remaining .= " <a target=\"_blank\" href=\"$CFG->wwwroot/enrol/cvent/apicalls_history.php\">(" . get_string('viewlog', 'enrol_cvent') . ")</a>";
         }
@@ -172,7 +173,7 @@ class enrolment_plugin_cvent {
     private function ensure_course($event) {
         global $CFG;
         if (!$course = get_record('course', 'idnumber', $event->eventcode)) {
-            print "Missing course \"$event->eventtitle\" with EventCode $event->eventcode\n";
+            print "Missing course \"$event->eventtitle\" with EventCode $event->eventcode<br />\n";
             if (!isset($CFG->enrol_cvent_autocreate_courses) or !$CFG->enrol_cvent_autocreate_courses) {
                 return false;
             }
@@ -180,7 +181,7 @@ class enrolment_plugin_cvent {
             if (isset($CFG->enrol_cvent_autocreate_category) and $CFG->enrol_cvent_autocreate_category) {
                 $categoryid = $CFG->enrol_cvent_autocreate_category;
             }
-            print "Auto-creating course \"$event->eventtitle\" with EventCode $event->eventcode\n";
+            print "Auto-creating course \"$event->eventtitle\" with EventCode $event->eventcode<br />\n";
             $course = create_course((object)array(
                 'fullname' => $event->eventtitle,
                 'shortname' => $event->eventtitle,
@@ -394,12 +395,12 @@ class enrolment_plugin_cvent {
             if ($rec = get_record('cvent_event', 'eventid', $event->eventid)) {
                 # Update this record.
                 $event->id = $rec->id;
-                print "Updating event ($event->eventid)\n";
+                print "Updating event ($event->eventid)<br />\n";
                 update_record('cvent_event', $event);
                 $this->ensure_course($event);
             } else {
                 # Insert this record.
-                print "Inserting event ($event->eventid)\n";
+                print "Inserting event ($event->eventid)<br />\n";
                 insert_record('cvent_event', $event);
                 $this->ensure_course($event);
             }
@@ -415,10 +416,10 @@ class enrolment_plugin_cvent {
     public function get_registrations($latestupdate=null) {
         global $CFG;
 
-        print __FUNCTION__ . "\n";
+        print __FUNCTION__ . "<br />\n";
 
         if (!$eventids = get_records_select('cvent_event', '', '', 'eventid')) {
-            print "cannot get_registrations without knowing eventids\n";
+            print "cannot get_registrations without knowing eventids<br />\n";
             return false;
         }
         $filters = array(
@@ -440,7 +441,7 @@ class enrolment_plugin_cvent {
             ))
         );
         if (!isset($searchresults->SearchResult)) {
-            print "no regresults!\n";
+            print "no regresults!<br />\n";
             return false;
         }
         $search_ids = is_array($searchresults->SearchResult->Id) ? $searchresults->SearchResult->Id : array($searchresults->SearchResult->Id);
@@ -476,7 +477,7 @@ class enrolment_plugin_cvent {
 
     private function sync_registrations() {
         if (!$camel_registrations = $this->get_registrations()) {
-            print "no registrations gotten\n";
+            print "no new/updated registrations gotten<br />\n";
             return false;
         }
         foreach ($camel_registrations as $camel_registration) {
@@ -503,10 +504,10 @@ class enrolment_plugin_cvent {
             }
             if ($rec = get_record('cvent_registration', 'registrationid', $registration->registrationid)) {
                 $registration->id = $rec->id;
-                print "Updating registration ($registration->registrationid)\n";
+                print "Updating registration ($registration->registrationid)<br />\n";
                 update_record('cvent_registration', $registration);
             } else {
-                print "Inserting registration ($registration->registrationid)\n";
+                print "Inserting registration ($registration->registrationid)<br />\n";
                 insert_record('cvent_registration', $registration);
             }
             if (isset($guestdetails)) {
@@ -538,10 +539,10 @@ class enrolment_plugin_cvent {
             }
             if ($rec = get_record('cvent_registration_guest', 'guestid', $guestdetail->guestid)) {
                 $guestdetail->id = $rec->id;
-                print "Updating guestdetail ($guestdetail->guestid)\n";
+                print "Updating guestdetail ($guestdetail->guestid)<br />\n";
                 update_record('cvent_registration_guest', $guestdetail);
             } else {
-                print "Inserting guestdetail ($guestdetail->guestid)\n";
+                print "Inserting guestdetail ($guestdetail->guestid)<br />\n";
                 insert_record('cvent_registration_guest', $guestdetail);
             }
             $guestdetail->homeaddress1 = $guestdetail->address1;
@@ -555,10 +556,10 @@ class enrolment_plugin_cvent {
     public function get_contacts($latestupdate=null) {
         global $CFG;
 
-        print __FUNCTION__ . "\n";
+        print __FUNCTION__ . "<br />\n";
 
         if (!$contactids = get_records_select('cvent_registration', '', '', 'contactid')) {
-            print "cannot get_contacts without known registrations\n";
+            print "cannot get_contacts without known registrations<br />\n";
             return false;
         }
         $filters = array(
@@ -607,7 +608,7 @@ class enrolment_plugin_cvent {
 
     private function sync_contacts() {
         if (!$camel_contacts = $this->get_contacts()) {
-            print "no contacts gotten\n";
+            print "no new/updated contacts gotten<br />\n";
             return false;
         }
         foreach ($camel_contacts as $camel_contact) {
@@ -640,10 +641,10 @@ class enrolment_plugin_cvent {
             }
             if ($rec = get_record('cvent_contact', 'contactid', $contact->contactid)) {
                 $contact->id = $rec->id;
-                print "Updating contact ($contact->contactid)\n";
+                print "Updating contact ($contact->contactid)<br />\n";
                 update_record('cvent_contact', $contact);
             } else {
-                print "Inserting contact ($contact->contactid)\n";
+                print "Inserting contact ($contact->contactid)<br />\n";
                 $contact->id = insert_record('cvent_contact', $contact);
             }
             $user = cvent_ensure_user($contact);
@@ -663,7 +664,7 @@ class enrolment_plugin_cvent {
 function cvent_ensure_user($contact) {
     global $CFG;
     if (!strlen($contact->emailaddress)) {
-        print "$contact->lastname, $contact->firstname ($contact->homephone) has no email address, skipping account creation/update\n";
+        print "$contact->lastname, $contact->firstname ($contact->homephone) has no email address, skipping account creation/update<br />\n";
     }
     $user = (object)array(
         'auth' => 'manual',
