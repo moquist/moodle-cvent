@@ -73,8 +73,12 @@ class enrolment_plugin_cvent {
      *
      * @param object IGNORED FOR NOW: The role to sync for. If no role is 
      * specified, defaults are used.
+     * @param bool $latestupdate if null (the default value), behavior is 
+     * normal, else if 'null' (the string) none of the GetUpdated() calls are 
+     * made. This can be used to reset records that have been pulled previously 
+     * in case any corrections need to be made in local data.
      */
-    public function sync_enrolments($role=null) {
+    public function sync_enrolments($role=null, $latestupdate=null) {
         global $CFG;
         error_reporting(E_ALL);
 
@@ -84,9 +88,9 @@ class enrolment_plugin_cvent {
         fix_course_sortorder();
 
         try {
-            $this->sync_events();
-            $this->sync_registrations();
-            $this->sync_contacts();
+            $this->sync_events($latestupdate);
+            $this->sync_registrations($latestupdate);
+            $this->sync_contacts($latestupdate);
 
             # TODO: make this faster and more efficient
             foreach (get_records('user') as $user) {
@@ -118,7 +122,7 @@ class enrolment_plugin_cvent {
         }
 
         $strmanualsunc = get_string('manualsync', 'enrol_cvent');
-        $manualsync = "<a target=\"_blank\" href=\"$CFG->wwwroot/enrol/cvent/enrol_cvent_sync.php\">$strmanualsunc</a>";
+        $manualsync = "<a target=\"_blank\" href=\"$CFG->wwwroot/enrol/cvent/enrol_cvent_sync.php?latestupdate=null\">$strmanualsunc</a>";
 
         foreach ($this->config_vars as $var => $default) {
             if (!isset($frm->$var)) {
@@ -371,8 +375,8 @@ class enrolment_plugin_cvent {
         return $this->cvent->retrieve_pages(CvObjectType::Event, $ids);
     }
 
-    private function sync_events() {
-        $camel_events = $this->get_events();
+    private function sync_events($latestupdate=null) {
+        $camel_events = $this->get_events($latestupdate);
         foreach ($camel_events as $camel_event) {
             $event = (object)array();
             foreach (get_object_vars($camel_event) as $key => $val) {
@@ -475,8 +479,8 @@ class enrolment_plugin_cvent {
         return CVentV200611::apicalls_log();
     }
 
-    private function sync_registrations() {
-        if (!$camel_registrations = $this->get_registrations()) {
+    private function sync_registrations($latestupdate=null) {
+        if (!$camel_registrations = $this->get_registrations($latestupdate)) {
             print "no new/updated registrations gotten<br />\n";
             return false;
         }
@@ -606,8 +610,8 @@ class enrolment_plugin_cvent {
         return $this->cvent->retrieve_pages(CvObjectType::Contact, $ids);
     }
 
-    private function sync_contacts() {
-        if (!$camel_contacts = $this->get_contacts()) {
+    private function sync_contacts($latestupdate=null) {
+        if (!$camel_contacts = $this->get_contacts($latestupdate)) {
             print "no new/updated contacts gotten<br />\n";
             return false;
         }
