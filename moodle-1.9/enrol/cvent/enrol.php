@@ -482,7 +482,7 @@ class enrolment_plugin_cvent {
         }
         foreach ($camel_registrations as $camel_registration) {
             $registration = (object)array();
-            $guestdetail = null;
+            $guestdetails = null;
             foreach (get_object_vars($camel_registration) as $key => $val) {
                 $key = strtolower($key);
                 if (!is_array($val) and !is_object($val)) {
@@ -590,7 +590,7 @@ class enrolment_plugin_cvent {
                 $latestupdate = gmdate(CV_DATEFORMAT, $tmp->latestupdate);
             }
         }
-        $contacts_latestupdate = time() - 120; # lop of 2 minutes in case of clock skew
+        $contacts_latestupdate = time() - 120; # lop off 2 minutes in case of clock skew
         if ($latestupdate != 'null' and isset($latestupdate)) {
             $getupdated_ids = $this->cvent->GetUpdated(
                 new GetUpdated(array(
