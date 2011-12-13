@@ -25,6 +25,11 @@ $string['couldnotinit'] = "Cvent could not be initialized; the number of API cal
 $string['youmustsetdatetimezone'] = "Error: date.timezone is not set in your php.ini. You must set this parameter before the Cvent enrolment plugin can work.";
 $string['manualsync'] = "Synchronize now";
 $string['clicktoseelogafter'] = "Click here to see the API calls log after this page is finished loading.";
+$string['enrol_cvent_cron_header'] = "Synchronization Via Moodle Cron";
+$string['enrol_cvent_cron_frequency'] = "The minimum number of minutes to wait before synchronizations with Cvent. Moodle cron must be configured for this to work. Enter '0' or leave blank to disable synchronization via Moodle cron.";
+$string['enrol_cvent_nocron'] = "Cvent enrolments: Not configured to synchronize during Moodle cron.\n";
+$string['enrol_cvent_nocron_now'] = "Cvent enrolments: Too early for next synchronization during Moodle cron.\n";
+$string['enrol_cvent_cron_now'] = "Cvent enrolments: Synchronizing now.\n";
 
 ?>
 

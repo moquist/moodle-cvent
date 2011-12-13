@@ -1,6 +1,6 @@
 <?php // $Id$
 
-# Call this from the command line to do regular synchornization. This is also 
+# Call this from the command line to do regular synchronization. This is also 
 # called when a Moodle admin clicks the synchronize-now link on the config page.
 #
 # From the CLI, pass '--latestupdate null' to re-fetch all Cvent data without 

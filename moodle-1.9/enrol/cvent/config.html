@@ -101,4 +101,20 @@
         </td>
     </tr>
 
+    <tr>
+        <th colspan="2" scope="col">
+            <?php print_string("enrol_cvent_cron_header", "enrol_cvent") ?>
+        </th>
+    </tr>
+    <tr>
+        <td align="right">enrol_cvent_cron_frequency:</td>
+        <td>
+            <?php if (!isset($frm->enrol_cvent_cron_frequency)) { $frm->enrol_cvent_cron_frequency = ''; } ?>
+            <input size="5" type="text" name="enrol_cvent_cron_frequency" value="<?php p($frm->enrol_cvent_cron_frequency) ?>" />
+        </td>
+        <td>
+            <?php  print_string("enrol_cvent_cron_frequency", "enrol_cvent") ?>
+        </td>
+    </tr>
+
 </table>

@@ -45,10 +45,11 @@ class enrolment_plugin_cvent {
         'enrol_cvent_search_location' => '',
         'enrol_cvent_autocreate_courses' => '',
         'enrol_cvent_autocreate_category' => '',
+        'enrol_cvent_cron_frequency' => '',
     );
 
     /*
-     * For the given user, look in the Cvent data pile for an authoritative list 
+     * For the given user, look in the Cvent data pile for an authoritative list
      * of enrolments, and then adjust the local Moodle assignments to match.
      * TODO: remove old enrollments
      */
@@ -71,11 +72,11 @@ class enrolment_plugin_cvent {
     /**
      * sync ALL DATA (including enrolments & users) with CVent, cache info locally
      *
-     * @param object IGNORED FOR NOW: The role to sync for. If no role is 
+     * @param object IGNORED FOR NOW: The role to sync for. If no role is
      * specified, defaults are used.
-     * @param bool $latestupdate if null (the default value), behavior is 
-     * normal, else if 'null' (the string) none of the GetUpdated() calls are 
-     * made. This can be used to reset records that have been pulled previously 
+     * @param bool $latestupdate if null (the default value), behavior is
+     * normal, else if 'null' (the string) none of the GetUpdated() calls are
+     * made. This can be used to reset records that have been pulled previously
      * in case any corrections need to be made in local data.
      */
     public function sync_enrolments($role=null, $latestupdate=null) {
@@ -94,11 +95,11 @@ class enrolment_plugin_cvent {
 
             # TODO: make this faster and more efficient
             foreach (get_records('user') as $user) {
-                print_string('setup_enrolments', 'enrol_cvent', $user->username);
+                cvent_safe_print(get_string('setup_enrolments', 'enrol_cvent', $user->username));
                 $this->setup_enrolments($user);
             }
         } catch (Exception $e) {
-            print "Exception SOAP info: " . $this->get_soap_trace() . "<br />\n";
+            cvent_safe_print("Exception SOAP info: " . $this->get_soap_trace() . "<br />\n");
             throw $e;
         }
         return true;
@@ -177,7 +178,7 @@ class enrolment_plugin_cvent {
     private function ensure_course($event) {
         global $CFG;
         if (!$course = get_record('course', 'idnumber', $event->eventcode)) {
-            print "Missing course \"$event->eventtitle\" with EventCode $event->eventcode<br />\n";
+            cvent_safe_print("Missing course \"$event->eventtitle\" with EventCode $event->eventcode<br />\n");
             if (!isset($CFG->enrol_cvent_autocreate_courses) or !$CFG->enrol_cvent_autocreate_courses) {
                 return false;
             }
@@ -185,7 +186,7 @@ class enrolment_plugin_cvent {
             if (isset($CFG->enrol_cvent_autocreate_category) and $CFG->enrol_cvent_autocreate_category) {
                 $categoryid = $CFG->enrol_cvent_autocreate_category;
             }
-            print "Auto-creating course \"$event->eventtitle\" with EventCode $event->eventcode<br />\n";
+            cvent_safe_print("Auto-creating course \"$event->eventtitle\" with EventCode $event->eventcode<br />\n");
             $course = create_course((object)array(
                 'fullname' => $event->eventtitle,
                 'shortname' => $event->eventtitle,
@@ -399,12 +400,12 @@ class enrolment_plugin_cvent {
             if ($rec = get_record('cvent_event', 'eventid', $event->eventid)) {
                 # Update this record.
                 $event->id = $rec->id;
-                print "Updating event ($event->eventid)<br />\n";
+                cvent_safe_print("Updating event ($event->eventid)<br />\n");
                 update_record('cvent_event', $event);
                 $this->ensure_course($event);
             } else {
                 # Insert this record.
-                print "Inserting event ($event->eventid)<br />\n";
+                cvent_safe_print("Inserting event ($event->eventid)<br />\n");
                 insert_record('cvent_event', $event);
                 $this->ensure_course($event);
             }
@@ -419,8 +420,6 @@ class enrolment_plugin_cvent {
      */
     public function get_registrations($latestupdate=null) {
         global $CFG;
-
-        print __FUNCTION__ . "<br />\n";
 
         if (!$eventids = get_records_select('cvent_event', '', '', 'eventid')) {
             print "cannot get_registrations without knowing eventids<br />\n";
@@ -508,10 +507,10 @@ class enrolment_plugin_cvent {
             }
             if ($rec = get_record('cvent_registration', 'registrationid', $registration->registrationid)) {
                 $registration->id = $rec->id;
-                print "Updating registration ($registration->registrationid)<br />\n";
+                cvent_safe_print("Updating registration ($registration->registrationid)<br />\n");
                 update_record('cvent_registration', $registration);
             } else {
-                print "Inserting registration ($registration->registrationid)<br />\n";
+                cvent_safe_print("Inserting registration ($registration->registrationid)<br />\n");
                 insert_record('cvent_registration', $registration);
             }
             if (isset($guestdetails)) {
@@ -543,10 +542,10 @@ class enrolment_plugin_cvent {
             }
             if ($rec = get_record('cvent_registration_guest', 'guestid', $guestdetail->guestid)) {
                 $guestdetail->id = $rec->id;
-                print "Updating guestdetail ($guestdetail->guestid)<br />\n";
+                cvent_safe_print("Updating guestdetail ($guestdetail->guestid)<br />\n");
                 update_record('cvent_registration_guest', $guestdetail);
             } else {
-                print "Inserting guestdetail ($guestdetail->guestid)<br />\n";
+                cvent_safe_print("Inserting guestdetail ($guestdetail->guestid)<br />\n");
                 insert_record('cvent_registration_guest', $guestdetail);
             }
             $guestdetail->homeaddress1 = $guestdetail->address1;
@@ -559,8 +558,6 @@ class enrolment_plugin_cvent {
 
     public function get_contacts($latestupdate=null) {
         global $CFG;
-
-        print __FUNCTION__ . "<br />\n";
 
         if (!$contactids = get_records_select('cvent_registration', '', '', 'contactid')) {
             print "cannot get_contacts without known registrations<br />\n";
@@ -645,10 +642,10 @@ class enrolment_plugin_cvent {
             }
             if ($rec = get_record('cvent_contact', 'contactid', $contact->contactid)) {
                 $contact->id = $rec->id;
-                print "Updating contact ($contact->contactid)<br />\n";
+                cvent_safe_print("Updating contact ($contact->contactid)<br />\n");
                 update_record('cvent_contact', $contact);
             } else {
-                print "Inserting contact ($contact->contactid)<br />\n";
+                cvent_safe_print("Inserting contact ($contact->contactid)<br />\n");
                 $contact->id = insert_record('cvent_contact', $contact);
             }
             $user = cvent_ensure_user($contact);
@@ -656,10 +653,37 @@ class enrolment_plugin_cvent {
         }
     }
 
+    /**
+     * Synchronize with Cvent if we're configured to do so.
+     * This function is run by admin/cron.php
+     * @return void
+     */
+    function cron() {
+        global $CFG;
+        if (!isset($CFG->enrol_cvent_cron_frequency) or empty($CFG->enrol_cvent_cron_frequency)) {
+            mtrace(get_string('enrol_cvent_nocron', 'enrol_cvent'));
+            return;
+        }
+        $cutoff = time() - ($CFG->enrol_cvent_cron_frequency * 60);
+        $notnow = get_records_sql("
+            SELECT * FROM {$CFG->prefix}cvent_apicalls_log
+            WHERE events_latestupdate > $cutoff
+            OR registrations_latestupdate > $cutoff
+            OR contacts_latestupdate > $cutoff
+            ");
+        if ($notnow) {
+            mtrace(get_string('enrol_cvent_nocron_now', 'enrol_cvent'));
+            return;
+        }
+        mtrace(get_string('enrol_cvent_cron_now', 'enrol_cvent'));
+        $this->sync_enrolments();
+        mtrace('done');
+    }
+
 } // end of class
 
 /**
- * Ensure that the given CVent Contact object has a corresponding Moodle 
+ * Ensure that the given CVent Contact object has a corresponding Moodle
  * user account.
  *
  * @param object $contact A CVent Contact object
@@ -668,7 +692,7 @@ class enrolment_plugin_cvent {
 function cvent_ensure_user($contact) {
     global $CFG;
     if (!strlen($contact->emailaddress)) {
-        print "$contact->lastname, $contact->firstname ($contact->homephone) has no email address, skipping account creation/update<br />\n";
+        cvent_safe_print("$contact->lastname, $contact->firstname ($contact->homephone) has no email address, skipping account creation/update<br />\n");
     }
     $user = (object)array(
         'auth' => 'manual',
@@ -698,6 +722,22 @@ function cvent_ensure_user($contact) {
         ));
     }
     return $user;
+}
+
+/**
+ * Output the specified string to a secure display. Since cron.php runs as
+ * admin, the only safe output ATM is the CLI. If we're not running in the CLI,
+ * output goes to error_log().
+ *
+ * @param $str The string to be printed somewhere.
+ */
+function cvent_safe_print($str) {
+    if (PHP_SAPI == 'cli') {
+        print $str;
+    } else {
+        error_log($str);
+    }
+    return;
 }
 
 ?>
