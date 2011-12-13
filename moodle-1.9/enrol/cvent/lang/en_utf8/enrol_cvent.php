@@ -28,7 +28,7 @@ $string['clicktoseelogafter'] = "Click here to see the API calls log after this 
 $string['enrol_cvent_cron_header'] = "Synchronization Via Moodle Cron";
 $string['enrol_cvent_cron_frequency'] = "The minimum number of minutes to wait before synchronizations with Cvent. Moodle cron must be configured for this to work. Enter '0' or leave blank to disable synchronization via Moodle cron.";
 $string['enrol_cvent_nocron'] = "Cvent enrolments: Not configured to synchronize during Moodle cron.\n";
-$string['enrol_cvent_nocron_now'] = "Cvent enrolments: Too early for next synchronization during Moodle cron.\n";
+$string['enrol_cvent_nocron_now'] = "Cvent enrolments: Too early for next synchronization during Moodle cron. Will synchronize again in \$a minute(s).\n";
 $string['enrol_cvent_cron_now'] = "Cvent enrolments: Synchronizing now.\n";
 
 ?>

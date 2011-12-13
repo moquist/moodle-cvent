@@ -664,20 +664,21 @@ class enrolment_plugin_cvent {
             mtrace(get_string('enrol_cvent_nocron', 'enrol_cvent'));
             return;
         }
-        $cutoff = time() - ($CFG->enrol_cvent_cron_frequency * 60);
-        $notnow = get_records_sql("
-            SELECT * FROM {$CFG->prefix}cvent_apicalls_log
-            WHERE events_latestupdate > $cutoff
-            OR registrations_latestupdate > $cutoff
-            OR contacts_latestupdate > $cutoff
-            ");
-        if ($notnow) {
-            mtrace(get_string('enrol_cvent_nocron_now', 'enrol_cvent'));
+        # There is no mdl_enrol table with a lastcron field.
+        # I will use mdl_config *and not feel guilty*!
+        $lastcron = isset($CFG->enrol_cvent_lastcron) ? $CFG->enrol_cvent_lastcron : 0;
+        $now = time();
+        $untilnextcron = ($lastcron + ($CFG->enrol_cvent_cron_frequency * 60)) - $now;
+        if ($untilnextcron > 0) {
+            # Round to at least one minute.
+            $untilnextcron = intval($untilnextcron / 60) + 1;
+            mtrace(get_string('enrol_cvent_nocron_now', 'enrol_cvent', $untilnextcron));
             return;
         }
         mtrace(get_string('enrol_cvent_cron_now', 'enrol_cvent'));
         $this->sync_enrolments();
         mtrace('done');
+        set_config('enrol_cvent_lastcron', $now);
     }
 
 } // end of class
