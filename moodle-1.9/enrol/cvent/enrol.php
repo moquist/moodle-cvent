@@ -25,6 +25,8 @@ global $CFG;
 #     - just keep updating this for now
 
 define('CV_DATEFORMAT', 'Y-m-d\TH:i:s'); # It's almost (but not quite!) DATE_ISO8601
+define('CV_ACCEPTED', 'Accepted');
+define('CV_CANCELLED', 'Cancelled');
 
 # TODO: Test what happens when the last registrant for an event signs up. Does it work? (See email from Rolando on July 5)
 
@@ -54,13 +56,14 @@ class enrolment_plugin_cvent {
      * TODO: remove old enrollments
      */
     public function setup_enrolments(&$user) {
+        global $CFG;
         if ($contact = get_record('cvent_contact', 'emailaddress', $user->username)) {
             # Ensure enrollment for each course where this contact is registered.
-            foreach (get_records('cvent_registration', 'contactid', $contact->contactid) as $reg) {
+            foreach (get_records_select('cvent_registration', "contactid = '$contact->contactid' AND status = '".CV_ACCEPTED."'") as $reg) {
                 $this->ensure_enrolment($reg->registrationid, $user);
             }
         }
-        if ($guestings = get_records('cvent_registration_guest', 'emailaddress', $user->username)) {
+        if ($guestings = get_records_sql("SELECT g.* FROM {$CFG->prefix}cvent_registration_guest g JOIN {$CFG->prefix}cvent_registration r ON r.registrationid = g.registrationid WHERE g.emailaddress = '$user->username' AND r.status = '".CV_ACCEPTED."'")) {
             # Ensure enrollment for each course where this contact is a Cvent-guest.
             foreach ($guestings as $guesting) {
                 $this->ensure_enrolment($guesting->registrationid, $user);
@@ -232,7 +235,7 @@ class enrolment_plugin_cvent {
 
         static $registrations = array();
         if (!isset($registrations[$registrationid])) {
-            $registrations[$registrationid] = get_record('cvent_registration', 'registrationid', $registrationid);
+            $registrations[$registrationid] = get_record('cvent_registration', 'registrationid', $registrationid, 'status', CV_ACCEPTED);
         }
         $reg = $registrations[$registrationid];
 
@@ -705,7 +708,7 @@ function cvent_ensure_user($contact) {
         'email' => $contact->emailaddress,
         'lang' => 'en_utf8', # default can be changed by user
         'address' => $contact->homeaddress1,
-        'city' => $contact->homecity,
+        'city' => substr($contact->homecity, 0, 20), # for moodle 1.9, truncate the city
         'country' => $contact->homecountrycode,
         'idnumber' => isset($contact->contactid) ? $contact->contactid : '',
     );
