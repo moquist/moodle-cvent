@@ -413,6 +413,16 @@ class enrolment_plugin_cvent {
                 $this->ensure_course($event);
             }
         }
+
+        # Ensure that every event has an existing course with an updated 
+        # FK_CventEventGuid.
+        # This call is partially redundant, but the design for this plugin in 
+        # 2.x is completely different and this will only be temporary (and 
+        # relatively inexpensive for all existing known users of this plugin).
+        $events = get_records('cvent_event');
+        foreach ($events as $event) {
+            $this->ensure_course($event);
+        }
     }
 
     /**
