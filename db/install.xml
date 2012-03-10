@@ -60,7 +60,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="enrol_cvent_registration" COMMENT="save copies of CVent Registration objects" PREVIOUS="enrol_cvent_event" NEXT="cvent_contact">
+    <TABLE NAME="enrol_cvent_registration" COMMENT="save copies of CVent Registration objects" PREVIOUS="enrol_cvent_event" NEXT="enrol_cvent_contact">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="registrationid"/>
         <FIELD NAME="registrationid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="Registration.Id value from Cvent" PREVIOUS="id" NEXT="contactid"/>
@@ -96,7 +96,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="cvent_contact" COMMENT="save copies of CVent Contact objects" PREVIOUS="enrol_cvent_registration" NEXT="enrol_cvent_registration_guest">
+    <TABLE NAME="enrol_cvent_contact" COMMENT="save copies of CVent Contact objects" PREVIOUS="enrol_cvent_registration" NEXT="enrol_cvent_registration_guest">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="contactid"/>
         <FIELD NAME="contactid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="Contact.Id value from Cvent" PREVIOUS="id" NEXT="sourceid"/>
@@ -158,7 +158,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="enrol_cvent_registration_guest" COMMENT="Registration.GuestDetail data from Cvent" PREVIOUS="cvent_contact">
+    <TABLE NAME="enrol_cvent_registration_guest" COMMENT="Registration.GuestDetail data from Cvent" PREVIOUS="enrol_cvent_contact">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="registrationid"/>
         <FIELD NAME="registrationid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="guestid"/>

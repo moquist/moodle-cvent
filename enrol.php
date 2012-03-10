@@ -57,7 +57,7 @@ class enrolment_plugin_cvent {
      */
     public function setup_enrolments(&$user) {
         global $CFG;
-        if ($contact = get_record('cvent_contact', 'emailaddress', $user->username)) {
+        if ($contact = get_record('enrol_cvent_contact', 'emailaddress', $user->username)) {
             # Ensure enrollment for each course where this contact is registered.
             foreach (get_records_select('enrol_cvent_registration', "contactid = '$contact->contactid' AND status = '".CV_ACCEPTED."'") as $reg) {
                 $this->ensure_enrolment($reg->registrationid, $user);
@@ -253,7 +253,7 @@ class enrolment_plugin_cvent {
 
         static $contacts = array();
         if (!isset($contacts[$reg->contactid])) {
-            $contacts[$reg->contactid] = get_record('cvent_contact', 'contactid', $reg->contactid);
+            $contacts[$reg->contactid] = get_record('enrol_cvent_contact', 'contactid', $reg->contactid);
         }
         $contact = $contacts[$reg->contactid];
 
@@ -653,13 +653,13 @@ class enrolment_plugin_cvent {
                     }
                 }
             }
-            if ($rec = get_record('cvent_contact', 'contactid', $contact->contactid)) {
+            if ($rec = get_record('enrol_cvent_contact', 'contactid', $contact->contactid)) {
                 $contact->id = $rec->id;
                 cvent_safe_print("Updating contact ($contact->contactid)<br />\n");
-                update_record('cvent_contact', $contact);
+                update_record('enrol_cvent_contact', $contact);
             } else {
                 cvent_safe_print("Inserting contact ($contact->contactid)<br />\n");
-                $contact->id = insert_record('cvent_contact', $contact);
+                $contact->id = insert_record('enrol_cvent_contact', $contact);
             }
             $user = cvent_ensure_user($contact);
             # Enrolments for this user will be handled later by setup_enrolments()
