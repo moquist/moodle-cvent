@@ -13,7 +13,7 @@ print <<<EOF
 <table border="1" cellspacing="0" cellpadding="2">
 <tr><th>$date</th><th>$callsmade</th><th>$callsremaining</th></tr>
 EOF;
-foreach(get_records('cvent_apicalls_log', '', '', 'yyyymmdd DESC') as $apicalls_log) {
+foreach(get_records('enrol_cvent_apicalls_log', '', '', 'yyyymmdd DESC') as $apicalls_log) {
     #$yyyymmdd = preg_split('//', $apicalls_log->yyyymmdd);
     #$date = implode('', array_slice($yyyymmdd, 0, 5)) . '-' . implode('', array_slice($yyyymmdd, 5, 2)) . '-' . implode('', array_slice($yyyymmdd, 7, 2));
     $date = preg_replace('/(....)(..)(..)/', '$1-$2-$3', $apicalls_log->yyyymmdd);

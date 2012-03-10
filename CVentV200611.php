@@ -2323,9 +2323,9 @@ class CVentV200611 extends SoapClient {
           $dt = new DateTime;
           date_timezone_set($dt, timezone_open('America/New_York'));
           $today_eastern = $dt->format('Ymd');
-          if (!$log = get_record('cvent_apicalls_log', 'yyyymmdd', $today_eastern)) {
-              insert_record('cvent_apicalls_log', (object)array('yyyymmdd' => $today_eastern));
-              $log = get_record('cvent_apicalls_log', 'yyyymmdd', $today_eastern);
+          if (!$log = get_record('enrol_cvent_apicalls_log', 'yyyymmdd', $today_eastern)) {
+              insert_record('enrol_cvent_apicalls_log', (object)array('yyyymmdd' => $today_eastern));
+              $log = get_record('enrol_cvent_apicalls_log', 'yyyymmdd', $today_eastern);
           }
       }
 
@@ -2350,7 +2350,7 @@ class CVentV200611 extends SoapClient {
           $update = true;
       }
       if ($update) {
-          update_record('cvent_apicalls_log', $log);
+          update_record('enrol_cvent_apicalls_log', $log);
       }
       return $log;
   }
