@@ -5,6 +5,7 @@ Sponsored by:
 
 Supported Moodle versions:
     * 1.9.10+ (Build: 20101117)
+    Alpha: * 2.0+ WORK IN PROGRESS
 
 Introduction:
     If you're a Cvent customer and you've got access to their integration API,
@@ -21,10 +22,11 @@ Introduction:
     are welcome!
 
 Installation:
-    Copy the moodle-1.9/enrol/cvent/ directory into your own moodle, and then go
+    Copy the the contents of this directory into your own moodle, and then go
     to http://yourmoodle.tld/admin/ in your browser. This will create the DB
-    tables. Then go to http://yourmoodle.tld/admin/enrol.php to enable the Cvent
-    module and configure its settings.
+    tables. Then go to
+    http://cvent.mojo.majen.net/admin/settings.php?section=manageenrols to
+    enable the Cvent module and configure its settings.
 
     You MUST be a Cvent customer with access to their API service, because in
     the settings page you'll need to enter the authentication information
@@ -32,7 +34,7 @@ Installation:
 
 Synchronizing:
     You'll need to set up a cron job (or Scheduled Task) to regularly run this
-    script in your moodle installation: enrol/cvent/enrol_cvent_sync.php
+    script in your moodle installation: enrol/cvent/cli/sync.php
 
     Each run of that script should use no more than 8 Cvent API calls, unless
     you have more than 10k updates in between two runs of this script.
@@ -40,7 +42,7 @@ Synchronizing:
 Testing:
     Just to be sure the basic connection works, you can execute the following on
     the command line:
-        php enrol/cvent/test.php 
+        php enrol/cvent/cli/test.php 
 
     Without any arguments, that script will just attempt to make a connection to
     Cvent. The script will tell you whether the connection was successful.
@@ -49,4 +51,4 @@ Testing:
     monkey with it as needed for debugging.
 
 Matt Oquist <moquist@majen.net>
-Sat Oct 29 15:33:16 EDT 2011
+Sat Mar 10 14:39:33 EST 2012

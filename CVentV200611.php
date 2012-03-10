@@ -2314,6 +2314,7 @@ class CVentV200611 extends SoapClient {
    *
    */
   public static function apicalls_log($addcall=false, $calls_remaining=null, $latestupdates=array()) {
+      global $DB;
       static $log = null;
       if (!isset($log)) {
           if (!strlen(ini_get('date.timezone'))) {
@@ -2323,9 +2324,9 @@ class CVentV200611 extends SoapClient {
           $dt = new DateTime;
           date_timezone_set($dt, timezone_open('America/New_York'));
           $today_eastern = $dt->format('Ymd');
-          if (!$log = get_record('cvent_apicalls_log', 'yyyymmdd', $today_eastern)) {
-              insert_record('cvent_apicalls_log', (object)array('yyyymmdd' => $today_eastern));
-              $log = get_record('cvent_apicalls_log', 'yyyymmdd', $today_eastern);
+          if (!$log = $DB->get_record('cvent_apicalls_log', array('yyyymmdd' => $today_eastern))) {
+              $DB->insert_record('cvent_apicalls_log', (object)array('yyyymmdd' => $today_eastern));
+              $log = $DB->get_record('cvent_apicalls_log', array('yyyymmdd' => $today_eastern));
           }
       }
 
@@ -2350,7 +2351,7 @@ class CVentV200611 extends SoapClient {
           $update = true;
       }
       if ($update) {
-          update_record('cvent_apicalls_log', $log);
+          $DB->update_record('cvent_apicalls_log', $log);
       }
       return $log;
   }
