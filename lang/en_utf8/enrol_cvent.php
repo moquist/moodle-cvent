@@ -1,5 +1,6 @@
 <?php
 
+$string['pluginname'] = 'Enrol-Cvent';
 $string['enrolname'] = 'Cvent';
 $string['server_settings'] = 'Cvent Settings';
 $string['description'] = "You can use Cvent (cvent.com) to manage your enrolments. (You must be a customer of Cvent and have API access in order to use this plugin.)";
