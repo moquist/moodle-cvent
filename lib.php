@@ -44,7 +44,7 @@ class enrol_cvent_plugin extends enrol_plugin {
         $enrols = array();
 
         # Enrol!
-        if ($contacts = $DB->get_records('cvent_contact', array('emailaddress' => $user->username))) {
+        if ($contacts = $DB->get_records('enrol_cvent_contact', array('emailaddress' => $user->username))) {
             foreach ($contacts as $contact) {
                 # Ensure enrollment for each course where this contact is registered.
                 foreach ($DB->get_records('enrol_cvent_registration', array('contactid' => $contact->contactid, 'status' => CV_ACCEPTED)) as $reg) {
@@ -276,7 +276,7 @@ class enrol_cvent_plugin extends enrol_plugin {
 
         static $contacts = array();
         if (!isset($contacts[$reg->contactid])) {
-            $contacts[$reg->contactid] = $DB->get_record('cvent_contact', array('contactid' => $reg->contactid));
+            $contacts[$reg->contactid] = $DB->get_record('enrol_cvent_contact', array('contactid' => $reg->contactid));
         }
         $contact = $contacts[$reg->contactid];
 
@@ -668,13 +668,13 @@ class enrol_cvent_plugin extends enrol_plugin {
                     }
                 }
             }
-            if ($rec = $DB->get_record('cvent_contact', array('contactid' => $contact->contactid))) {
+            if ($rec = $DB->get_record('enrol_cvent_contact', array('contactid' => $contact->contactid))) {
                 $contact->id = $rec->id;
                 cvent_safe_print("Updating contact ($contact->contactid)<br />\n");
-                $DB->update_record('cvent_contact', $contact);
+                $DB->update_record('enrol_cvent_contact', $contact);
             } else {
                 cvent_safe_print("Inserting contact ($contact->contactid)<br />\n");
-                $contact->id = $DB->insert_record('cvent_contact', $contact);
+                $contact->id = $DB->insert_record('enrol_cvent_contact', $contact);
             }
             $user = cvent_ensure_user($contact);
             # Enrolments for this user will be handled later by setup_enrolments()
