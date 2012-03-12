@@ -44,6 +44,7 @@ $string['enrol_cvent_cron_header'] = "Synchronization Via Moodle Cron";
 $string['enrol_cvent_nocron'] = "Cvent enrolments: Not configured to synchronize during Moodle cron.\n";
 $string['enrol_cvent_nocron_now'] = "Cvent enrolments: Too early for next synchronization during Moodle cron. Will synchronize again in {\$a} minute(s).\n";
 $string['enrol_cvent_cron_now'] = "Cvent enrolments: Synchronizing now.\n";
+$string['enrol_cvent_mustbeadmin'] = "Must be admin or must run from CLI!<br />\n";
 
 ?>
 

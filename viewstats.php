@@ -21,12 +21,12 @@ EOF;
 $enrol = new enrol_cvent_plugin();
 #$apicalls_made = get_string('apicallsmade', 'enrol_cvent', $enrol->apicalls_log()->calls_made);
 $strmanualsunc = get_string('manualsync', 'enrol_cvent');
-$manualsync = "<a target=\"_blank\" href=\"$CFG->wwwroot/enrol/cvent/sync.php?latestupdate=null\">$strmanualsunc</a>";
+$manualsync = "<a target=\"_blank\" href=\"$CFG->wwwroot/enrol/cvent/cli/sync.php?latestupdate=null\">$strmanualsunc</a>";
 
 print "
     <p>$manualsync</p>
 ";
-foreach($DB->get_records('cvent_apicalls_log', null, 'yyyymmdd DESC') as $apicalls_log) {
+foreach($DB->get_records('enrol_cvent_apicalls_log', null, 'yyyymmdd DESC') as $apicalls_log) {
     $date = preg_replace('/(....)(..)(..)/', '$1-$2-$3', $apicalls_log->yyyymmdd);
     print "<tr><td>$date</td><td style=\"text-align:right\">$apicalls_log->calls_made</td><td style=\"text-align:right\">$apicalls_log->calls_remaining</td></tr>\n";
 }

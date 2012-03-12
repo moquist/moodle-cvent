@@ -47,14 +47,14 @@ class enrol_cvent_plugin extends enrol_plugin {
         if ($contacts = $DB->get_records('cvent_contact', array('emailaddress' => $user->username))) {
             foreach ($contacts as $contact) {
                 # Ensure enrollment for each course where this contact is registered.
-                foreach ($DB->get_records('cvent_registration', array('contactid' => $contact->contactid, 'status' => CV_ACCEPTED)) as $reg) {
+                foreach ($DB->get_records('enrol_cvent_registration', array('contactid' => $contact->contactid, 'status' => CV_ACCEPTED)) as $reg) {
                     if ($courseid = $this->ensure_enrolment($reg->registrationid, $user)) {
                         $enrols[$courseid] = true;
                     }
                 }
             }
         }
-        if ($guestings = $DB->get_records_sql("SELECT g.* FROM {cvent_registration_guest} g JOIN {cvent_registration} r ON r.registrationid = g.registrationid WHERE g.emailaddress = ? AND r.status = ?", array($user->username, CV_ACCEPTED))) {
+        if ($guestings = $DB->get_records_sql("SELECT g.* FROM {enrol_cvent_registration_guest} g JOIN {enrol_cvent_registration} r ON r.registrationid = g.registrationid WHERE g.emailaddress = ? AND r.status = ?", array($user->username, CV_ACCEPTED))) {
             # Ensure enrollment for each course where this user is a Cvent-guest.
             foreach ($guestings as $guesting) {
                 if ($courseid = $this->ensure_enrolment($guesting->registrationid, $user)) {
@@ -232,13 +232,13 @@ class enrol_cvent_plugin extends enrol_plugin {
 
         static $registrations = array();
         if (!isset($registrations[$registrationid])) {
-            $registrations[$registrationid] = $DB->get_record('cvent_registration', array('registrationid' => $registrationid, 'status' => CV_ACCEPTED));
+            $registrations[$registrationid] = $DB->get_record('enrol_cvent_registration', array('registrationid' => $registrationid, 'status' => CV_ACCEPTED));
         }
         $reg = $registrations[$registrationid];
 
         static $events = array();
         if (!isset($events[$reg->eventid])) {
-            $events[$reg->eventid] = $DB->get_record('cvent_event', array('eventid' => $reg->eventid));
+            $events[$reg->eventid] = $DB->get_record('enrol_cvent_event', array('eventid' => $reg->eventid));
         }
         $event = $events[$reg->eventid];
 
@@ -380,7 +380,7 @@ class enrol_cvent_plugin extends enrol_plugin {
         $ids = $search_ids;
 
         if (!isset($latestupdate)) {
-            if ($tmp = $DB->get_record_sql("SELECT MAX(events_latestupdate) AS latestupdate FROM {cvent_apicalls_log}")) {
+            if ($tmp = $DB->get_record_sql("SELECT MAX(events_latestupdate) AS latestupdate FROM {enrol_cvent_apicalls_log}")) {
                 $latestupdate = gmdate(CV_DATEFORMAT, $tmp->latestupdate);
             }
         }
@@ -422,16 +422,16 @@ class enrol_cvent_plugin extends enrol_plugin {
                     }
                 }
             }
-            if ($rec = $DB->get_record('cvent_event', array('eventid' => $event->eventid))) {
+            if ($rec = $DB->get_record('enrol_cvent_event', array('eventid' => $event->eventid))) {
                 # Update this record.
                 $event->id = $rec->id;
                 cvent_safe_print("Updating event ($event->eventid)<br />\n");
-                $DB->update_record('cvent_event', $event);
+                $DB->update_record('enrol_cvent_event', $event);
                 $this->ensure_course($event);
             } else {
                 # Insert this record.
                 cvent_safe_print("Inserting event ($event->eventid)<br />\n");
-                $DB->insert_record('cvent_event', $event);
+                $DB->insert_record('enrol_cvent_event', $event);
                 $this->ensure_course($event);
             }
         }
@@ -446,7 +446,7 @@ class enrol_cvent_plugin extends enrol_plugin {
     public function get_registrations($latestupdate=null) {
         global $DB;
 
-        if (!$eventids = $DB->get_records_select('cvent_event', '', null, '', 'eventid')) {
+        if (!$eventids = $DB->get_records_select('enrol_cvent_event', '', null, '', 'eventid')) {
             print "cannot get_registrations without knowing eventids<br />\n";
             return false;
         }
@@ -476,7 +476,7 @@ class enrol_cvent_plugin extends enrol_plugin {
         $ids = $search_ids;
 
         if (!isset($latestupdate)) {
-            if ($tmp = $DB->get_record_sql("SELECT MAX(registrations_latestupdate) AS latestupdate FROM {cvent_apicalls_log}")) {
+            if ($tmp = $DB->get_record_sql("SELECT MAX(registrations_latestupdate) AS latestupdate FROM {enrol_cvent_apicalls_log}")) {
                 $latestupdate = gmdate(CV_DATEFORMAT, $tmp->latestupdate);
             }
         }
@@ -531,13 +531,13 @@ class enrol_cvent_plugin extends enrol_plugin {
                     $guestdetails = $val;
                 }
             }
-            if ($rec = $DB->get_record('cvent_registration', array('registrationid' => $registration->registrationid))) {
+            if ($rec = $DB->get_record('enrol_cvent_registration', array('registrationid' => $registration->registrationid))) {
                 $registration->id = $rec->id;
                 cvent_safe_print("Updating registration ($registration->registrationid)<br />\n");
-                $DB->update_record('cvent_registration', $registration);
+                $DB->update_record('enrol_cvent_registration', $registration);
             } else {
                 cvent_safe_print("Inserting registration ($registration->registrationid)<br />\n");
-                $DB->insert_record('cvent_registration', $registration);
+                $DB->insert_record('enrol_cvent_registration', $registration);
             }
             if (isset($guestdetails)) {
                 if (is_object($guestdetails)) {
@@ -567,13 +567,13 @@ class enrol_cvent_plugin extends enrol_plugin {
                     }
                 }
             }
-            if ($rec = $DB->get_record('cvent_registration_guest', array('guestid' => $guestdetail->guestid))) {
+            if ($rec = $DB->get_record('enrol_cvent_registration_guest', array('guestid' => $guestdetail->guestid))) {
                 $guestdetail->id = $rec->id;
                 cvent_safe_print("Updating guestdetail ($guestdetail->guestid)<br />\n");
-                $DB->update_record('cvent_registration_guest', $guestdetail);
+                $DB->update_record('enrol_cvent_registration_guest', $guestdetail);
             } else {
                 cvent_safe_print("Inserting guestdetail ($guestdetail->guestid)<br />\n");
-                $DB->insert_record('cvent_registration_guest', $guestdetail);
+                $DB->insert_record('enrol_cvent_registration_guest', $guestdetail);
             }
             $guestdetail->homeaddress1 = $guestdetail->address1;
             $guestdetail->homecity = $guestdetail->city;
@@ -586,7 +586,7 @@ class enrol_cvent_plugin extends enrol_plugin {
     public function get_contacts($latestupdate=null) {
         global $DB;
 
-        if (!$contactids = $DB->get_records_select('cvent_registration', '', null, '', 'contactid')) {
+        if (!$contactids = $DB->get_records_select('enrol_cvent_registration', '', null, '', 'contactid')) {
             print "cannot get_contacts without known registrations<br />\n";
             return false;
         }
@@ -614,7 +614,7 @@ class enrol_cvent_plugin extends enrol_plugin {
 
 
         if (!isset($latestupdate)) {
-            if ($tmp = $DB->get_record_sql("SELECT MAX(contacts_latestupdate) AS latestupdate FROM {cvent_apicalls_log}")) {
+            if ($tmp = $DB->get_record_sql("SELECT MAX(contacts_latestupdate) AS latestupdate FROM {enrol_cvent_apicalls_log}")) {
                 $latestupdate = gmdate(CV_DATEFORMAT, $tmp->latestupdate);
             }
         }
@@ -757,7 +757,7 @@ function cvent_ensure_user($contact) {
  * @param $str The string to be printed somewhere.
  */
 function cvent_safe_print($str) {
-    if (PHP_SAPI == 'cli') {
+    if (CLI_SCRIPT) {
         print $str;
     } else {
         error_log($str);
@@ -780,7 +780,7 @@ function cvent_force_sync($latestupdate) {
 
     $enrol = new enrol_cvent_plugin();
 
-    if (PHP_SAPI != 'cli') {
+    if (!CLI_SCRIPT) {
         print "<p><big><big><a target=\"_blank\" href=\"$CFG->wwwroot/enrol/cvent/viewstats.php\">(" . get_string('clicktoseelogafter', 'enrol_cvent') . ")</a></big></big></p>";
     }
     $enrol->sync_enrolments($latestupdate);
