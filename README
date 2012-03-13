@@ -25,7 +25,7 @@ Installation:
     Copy the the contents of this directory into your own moodle, and then go
     to http://yourmoodle.tld/admin/ in your browser. This will create the DB
     tables. Then go to
-    http://cvent.mojo.majen.net/admin/settings.php?section=manageenrols to
+    http://yourmoodle.tld/admin/settings.php?section=manageenrols to
     enable the Cvent module and configure its settings.
 
     You MUST be a Cvent customer with access to their API service, because in
