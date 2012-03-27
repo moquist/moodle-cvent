@@ -50,5 +50,11 @@ Testing:
     test.php can do other things, too, and it's intended that developers will
     monkey with it as needed for debugging.
 
+TODO:
+    * add configuration settings that determine how user provisioning works
+        * how do we check for pre-existing accounts?
+        * how do we set username/password for new accounts?
+    * document how user provisioning and enrollment handling work
+
 Matt Oquist <moquist@majen.net>
 Sat Mar 10 14:39:33 EST 2012
