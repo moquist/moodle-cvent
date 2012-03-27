@@ -61,7 +61,6 @@ class enrolment_plugin_cvent {
             foreach ($contacts as $contact) {
                 # Ensure enrollment for each course where this contact is registered.
                 foreach (get_records_select('enrol_cvent_registration', "contactid = '$contact->contactid' AND status = '".CV_ACCEPTED."'") as $reg) {
-                    print "ensuring $reg->registrationid\n";
                     $this->ensure_enrolment($reg->registrationid, $user);
                 }
             }
