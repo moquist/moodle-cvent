@@ -57,10 +57,13 @@ class enrolment_plugin_cvent {
      */
     public function setup_enrolments(&$user) {
         global $CFG;
-        if ($contact = get_record('enrol_cvent_contact', 'emailaddress', $user->username)) {
-            # Ensure enrollment for each course where this contact is registered.
-            foreach (get_records_select('enrol_cvent_registration', "contactid = '$contact->contactid' AND status = '".CV_ACCEPTED."'") as $reg) {
-                $this->ensure_enrolment($reg->registrationid, $user);
+        if ($contacts = get_records('enrol_cvent_contact', 'emailaddress', $user->username)) {
+            foreach ($contacts as $contact) {
+                # Ensure enrollment for each course where this contact is registered.
+                foreach (get_records_select('enrol_cvent_registration', "contactid = '$contact->contactid' AND status = '".CV_ACCEPTED."'") as $reg) {
+                    print "ensuring $reg->registrationid\n";
+                    $this->ensure_enrolment($reg->registrationid, $user);
+                }
             }
         }
         if ($guestings = get_records_sql("SELECT g.* FROM {$CFG->prefix}enrol_cvent_registration_guest g JOIN {$CFG->prefix}enrol_cvent_registration r ON r.registrationid = g.registrationid WHERE g.emailaddress = '$user->username' AND r.status = '".CV_ACCEPTED."'")) {
