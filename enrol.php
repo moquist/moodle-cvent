@@ -691,7 +691,7 @@ class enrolment_plugin_cvent {
             return;
         }
         mtrace(get_string('enrol_cvent_cron_now', 'enrol_cvent'));
-        $this->sync_enrolments();
+        $this->sync_enrolments(null, 'null');
         mtrace('done');
         set_config('enrol_cvent_lastcron', $now);
     }
