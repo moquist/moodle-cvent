@@ -721,7 +721,7 @@ function cvent_ensure_user($contact) {
         'lang' => 'en_utf8', # default can be changed by user
         'address' => $contact->homeaddress1,
         'city' => substr($contact->homecity, 0, 20), # for moodle 1.9, truncate the city
-        'country' => $contact->homecountrycode,
+        'country' => substr($contact->homecountrycode, 0, 2),
         'idnumber' => isset($contact->contactid) ? $contact->contactid : '',
     );
     if ($rec = get_record('user', 'username', $user->username)) {
