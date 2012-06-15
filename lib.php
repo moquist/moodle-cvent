@@ -723,14 +723,14 @@ function cvent_ensure_user($contact) {
         'auth' => 'manual',
         'confirmed' => 1,
         'mnethostid' => $CFG->mnet_localhost_id,
-        'username' => $contact->emailaddress,
-        'firstname' => $contact->firstname,
-        'lastname' => $contact->lastname,
-        'email' => $contact->emailaddress,
+        'username' => substr($contact->emailaddress, 0, 100),
+        'firstname' => substr($contact->firstname, 0, 100),
+        'lastname' => substr($contact->lastname, 0, 100),
+        'email' => substr($contact->emailaddress, 0, 100),
         'lang' => 'en_utf8', # default can be changed by user
-        'address' => $contact->homeaddress1,
-        'city' => $contact->homecity,
-        'country' => $contact->homecountrycode,
+        'address' => substr($contact->homeaddress1, 0, 70),
+        'city' => substr($contact->homecity, 0, 120),
+        'country' => substr($contact->homecountrycode, 0, 2),
         'idnumber' => isset($contact->contactid) ? $contact->contactid : '',
     );
     if ($rec = $DB->get_record('user', array('username' => $user->username))) {
