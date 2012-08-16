@@ -2387,7 +2387,7 @@ class CVentV200611 extends SoapClient {
   public function retrieve_pages($objecttype, $ids) {
       $allresults = array();
       for ($pagestart=0; $pagestart < count($ids); $pagestart += $this->maxbatchsize) {
-          $results = $this->Retrieve(new Retrieve(array('ObjectType' => $objecttype, 'Ids' => array_slice($ids, $pagestart, $pagestart + $this->maxbatchsize))));
+          $results = $this->Retrieve(new Retrieve(array('ObjectType' => $objecttype, 'Ids' => array_slice($ids, $pagestart, $this->maxbatchsize))));
           $cvobjects = is_array($results->RetrieveResult->CvObject) ? $results->RetrieveResult->CvObject : array($results->RetrieveResult->CvObject);
           $allresults = array_merge($allresults, $cvobjects);
       }
