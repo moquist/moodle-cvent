@@ -194,7 +194,7 @@ class enrolment_plugin_cvent {
             cvent_safe_print("Auto-creating course \"$event->eventtitle\" with EventCode $event->eventcode<br />\n");
             $course = create_course((object)array(
                 'fullname' => $event->eventtitle,
-                'shortname' => $event->eventtitle,
+                'shortname' => substr($event->eventtitle, 0, 100), # For Moodle 1.9, truncate the shortname.
                 'idnumber' => $event->eventcode,
                 'startdate' => strtotime($event->eventstartdate),
                 'category' => $categoryid,
