@@ -21,7 +21,7 @@ Introduction:
     are welcome!
 
 Installation:
-    Copy the moodle-1.9/enrol/cvent/ directory into your own moodle, and then go
+    Copy the the contents of this directory into your own moodle, and then go
     to http://yourmoodle.tld/admin/ in your browser. This will create the DB
     tables. Then go to http://yourmoodle.tld/admin/enrol.php to enable the Cvent
     module and configure its settings.
@@ -31,11 +31,11 @@ Installation:
     (username, account number, and password) they give you for their API.
 
 Synchronizing:
-    You'll need to set up a cron job (or Scheduled Task) to regularly run this
-    script in your moodle installation: enrol/cvent/enrol_cvent_sync.php
+    This plugin uses Moodle's cron() feature to synchronize regularly.
 
-    Each run of that script should use no more than 8 Cvent API calls, unless
-    you have more than 10k updates in between two runs of this script.
+    Each execution of the cron() for this enrolment plugin should use no more
+    than 8 Cvent API calls, unless you have more than 10k updates in between two
+    runs of this script.
 
 Testing:
     Just to be sure the basic connection works, you can execute the following on
