@@ -31,6 +31,14 @@ Installation:
     the settings page you'll need to enter the authentication information
     (username, account number, and password) they give you for their API.
 
+Dependencies:
+    You must have the PHP xmlrpc and curl libraries installed on your system.
+
+    If you're running Ubuntu, for example, you can probably get these by running
+    the following commands in a terminal:
+    $ sudo apt-get install php5-xmlrpc php5-curl
+    $ sudo /etc/init.d/apache2 restart
+
 Synchronizing:
     This plugin uses Moodle's cron() feature to synchronize regularly.
 
