@@ -108,9 +108,9 @@ class enrol_cvent_plugin extends enrol_plugin {
      * @param object IGNORED FOR NOW: The role to sync for. If no role is
      * specified, defaults are used.
      * @param bool $latestupdate if null (the default value), behavior is
-     * normal, else if 'null' (the string) none of the GetUpdated() calls are
-     * made. This can be used to reset records that have been pulled previously
-     * in case any corrections need to be made in local data.
+     * normal, else if 'getall' (the string) none of the GetUpdated() calls are
+     * made. This can be used to re-pull records that have been pulled 
+     * previously in case any corrections need to be made in local data.
      */
     public function sync_enrolments($latestupdate=null) {
         global $DB;
@@ -385,7 +385,7 @@ class enrol_cvent_plugin extends enrol_plugin {
             }
         }
         $events_latestupdate = time() - 120; # lop of 2 minutes in case of clock skew
-        if ($latestupdate != 'null' and isset($latestupdate)) {
+        if ($latestupdate != 'getall' and isset($latestupdate)) {
             $getupdated_ids = $this->cvent->GetUpdated(
                 new GetUpdated(array(
                     'ObjectType' => CvObjectType::Event,
@@ -480,8 +480,8 @@ class enrol_cvent_plugin extends enrol_plugin {
                 $latestupdate = gmdate(CV_DATEFORMAT, $tmp->latestupdate);
             }
         }
-        $registrations_latestupdate = time() - 120; # lop of 2 minutes in case of clock skew
-        if ($latestupdate != 'null' and isset($latestupdate)) {
+        $registrations_latestupdate = time() - 120; # lop off 2 minutes in case of clock skew
+        if ($latestupdate != 'getall' and isset($latestupdate)) {
             $getupdated_ids = $this->cvent->GetUpdated(
                 new GetUpdated(array(
                     'ObjectType' => CvObjectType::Registration,
@@ -619,7 +619,7 @@ class enrol_cvent_plugin extends enrol_plugin {
             }
         }
         $contacts_latestupdate = time() - 120; # lop off 2 minutes in case of clock skew
-        if ($latestupdate != 'null' and isset($latestupdate)) {
+        if ($latestupdate != 'getall' and isset($latestupdate)) {
             $getupdated_ids = $this->cvent->GetUpdated(
                 new GetUpdated(array(
                     'ObjectType' => CvObjectType::Contact,

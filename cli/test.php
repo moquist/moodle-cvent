@@ -121,7 +121,7 @@ function main($argv) {
 
 function usage() {
     print "Usage:
-        php test.php [ --events ] [ --registrations ] [ --contacts ] { <latestupdate date as GMT: YYYY-MM-DDTHH:MM:SS> | 'null' }
+        php test.php [ --events ] [ --registrations ] [ --contacts ] { <latestupdate date as GMT: YYYY-MM-DDTHH:MM:SS> | 'getall' }
         With no options, test.php will try to authenticate to Cvent and tell you how it goes.
         ";
     exit;

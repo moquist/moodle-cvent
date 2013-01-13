@@ -3,10 +3,10 @@
 # Call this from the command line to do regular synchronization. This is also 
 # called when a Moodle admin clicks the synchronize-now link on the config page.
 #
-# From the CLI, pass '--latestupdate null' to re-fetch all Cvent data without 
+# From the CLI, pass '--latestupdate getall' to re-fetch all Cvent data without 
 # limiting to updates since the most recent synchronization.
 #
-# Using your browser, pass latestupdate=null to accomplish the same thing. The 
+# Using your browser, pass latestupdate=getall to accomplish the same thing. The 
 # synchronize-now link on the config page passes this param by default to 
 # provide an easy way to re-pull all Cvent data.
 
