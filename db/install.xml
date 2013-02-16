@@ -6,14 +6,14 @@
   <TABLES>
     <TABLE NAME="enrol_cvent_apicalls_log" COMMENT="log the number of api calls made to cvent each day from this client" NEXT="enrol_cvent_event">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="yyyymmdd"/>
-        <FIELD NAME="yyyymmdd" TYPE="int" LENGTH="8" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="calls_made"/>
-        <FIELD NAME="calls_made" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="yyyymmdd" NEXT="calls_remaining"/>
-        <FIELD NAME="calls_remaining" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="calls_made" NEXT="limit_exceeded"/>
-        <FIELD NAME="limit_exceeded" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="calls_remaining" NEXT="events_latestupdate"/>
-        <FIELD NAME="events_latestupdate" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="the latest UNIX timestamp we sent as GetUpdated.EndDate for events" PREVIOUS="limit_exceeded" NEXT="registrations_latestupdate"/>
-        <FIELD NAME="registrations_latestupdate" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="the latest UNIX timestamp we sent as GetUpdated.EndDate for registrations" PREVIOUS="events_latestupdate" NEXT="contacts_latestupdate"/>
-        <FIELD NAME="contacts_latestupdate" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" COMMENT="the latest UNIX timestamp we sent as GetUpdated.EndDate for contacts" PREVIOUS="registrations_latestupdate"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"  NEXT="yyyymmdd"/>
+        <FIELD NAME="yyyymmdd" TYPE="int" LENGTH="8" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"  PREVIOUS="id" NEXT="calls_made"/>
+        <FIELD NAME="calls_made" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"  PREVIOUS="yyyymmdd" NEXT="calls_remaining"/>
+        <FIELD NAME="calls_remaining" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"  PREVIOUS="calls_made" NEXT="limit_exceeded"/>
+        <FIELD NAME="limit_exceeded" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"  PREVIOUS="calls_remaining" NEXT="events_latestupdate"/>
+        <FIELD NAME="events_latestupdate" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"  COMMENT="the latest UNIX timestamp we sent as GetUpdated.EndDate for events" PREVIOUS="limit_exceeded" NEXT="registrations_latestupdate"/>
+        <FIELD NAME="registrations_latestupdate" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"  COMMENT="the latest UNIX timestamp we sent as GetUpdated.EndDate for registrations" PREVIOUS="events_latestupdate" NEXT="contacts_latestupdate"/>
+        <FIELD NAME="contacts_latestupdate" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"  COMMENT="the latest UNIX timestamp we sent as GetUpdated.EndDate for contacts" PREVIOUS="registrations_latestupdate"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="yyyymmdd_ux"/>
@@ -22,39 +22,39 @@
     </TABLE>
     <TABLE NAME="enrol_cvent_event" COMMENT="save local copy of a Cvent Event object" PREVIOUS="enrol_cvent_apicalls_log" NEXT="enrol_cvent_registration">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="eventid"/>
-        <FIELD NAME="eventid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="the Event.Id value from Cvent" PREVIOUS="id" NEXT="eventcode"/>
-        <FIELD NAME="eventcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventid" NEXT="eventtitle"/>
-        <FIELD NAME="eventtitle" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventcode" NEXT="eventstartdate"/>
-        <FIELD NAME="eventstartdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventtitle" NEXT="eventenddate"/>
-        <FIELD NAME="eventenddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventstartdate" NEXT="eventlaunchdate"/>
-        <FIELD NAME="eventlaunchdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventenddate" NEXT="timezone"/>
-        <FIELD NAME="timezone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventlaunchdate" NEXT="eventdescription"/>
-        <FIELD NAME="eventdescription" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="timezone" NEXT="internalnote"/>
-        <FIELD NAME="internalnote" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventdescription" NEXT="eventstatus"/>
-        <FIELD NAME="eventstatus" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="internalnote" NEXT="planningstatus"/>
-        <FIELD NAME="planningstatus" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventstatus" NEXT="capacity"/>
-        <FIELD NAME="capacity" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="planningstatus" NEXT="category"/>
-        <FIELD NAME="category" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="capacity" NEXT="currency"/>
-        <FIELD NAME="currency" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="category" NEXT="hidden"/>
-        <FIELD NAME="hidden" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="currency" NEXT="location"/>
-        <FIELD NAME="location" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="hidden" NEXT="streetaddress1"/>
-        <FIELD NAME="streetaddress1" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="location" NEXT="streetaddress2"/>
-        <FIELD NAME="streetaddress2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="streetaddress1" NEXT="streetaddress3"/>
-        <FIELD NAME="streetaddress3" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="streetaddress2" NEXT="city"/>
-        <FIELD NAME="city" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="streetaddress3" NEXT="state"/>
-        <FIELD NAME="state" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="city" NEXT="statecode"/>
-        <FIELD NAME="statecode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="state" NEXT="postalcode"/>
-        <FIELD NAME="postalcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="statecode" NEXT="country"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="postalcode" NEXT="countrycode"/>
-        <FIELD NAME="countrycode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="country" NEXT="phonenumber"/>
-        <FIELD NAME="phonenumber" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="countrycode" NEXT="plannerfirstname"/>
-        <FIELD NAME="plannerfirstname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="phonenumber" NEXT="plannerlastname"/>
-        <FIELD NAME="plannerlastname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="plannerfirstname" NEXT="planneremailaddress"/>
-        <FIELD NAME="planneremailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="plannerlastname" NEXT="rsvpbydate"/>
-        <FIELD NAME="rsvpbydate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="planneremailaddress" NEXT="closedby"/>
-        <FIELD NAME="closedby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="rsvpbydate" NEXT="lastmodifieddate"/>
-        <FIELD NAME="lastmodifieddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="closedby"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"  NEXT="eventid"/>
+        <FIELD NAME="eventid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="the Event.Id value from Cvent" PREVIOUS="id" NEXT="eventcode"/>
+        <FIELD NAME="eventcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventid" NEXT="eventtitle"/>
+        <FIELD NAME="eventtitle" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventcode" NEXT="eventstartdate"/>
+        <FIELD NAME="eventstartdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventtitle" NEXT="eventenddate"/>
+        <FIELD NAME="eventenddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventstartdate" NEXT="eventlaunchdate"/>
+        <FIELD NAME="eventlaunchdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventenddate" NEXT="timezone"/>
+        <FIELD NAME="timezone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventlaunchdate" NEXT="eventdescription"/>
+        <FIELD NAME="eventdescription" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false"  PREVIOUS="timezone" NEXT="internalnote"/>
+        <FIELD NAME="internalnote" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventdescription" NEXT="eventstatus"/>
+        <FIELD NAME="eventstatus" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="internalnote" NEXT="planningstatus"/>
+        <FIELD NAME="planningstatus" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventstatus" NEXT="capacity"/>
+        <FIELD NAME="capacity" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"  PREVIOUS="planningstatus" NEXT="category"/>
+        <FIELD NAME="category" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="capacity" NEXT="currency"/>
+        <FIELD NAME="currency" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="category" NEXT="hidden"/>
+        <FIELD NAME="hidden" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"  PREVIOUS="currency" NEXT="location"/>
+        <FIELD NAME="location" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="hidden" NEXT="streetaddress1"/>
+        <FIELD NAME="streetaddress1" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="location" NEXT="streetaddress2"/>
+        <FIELD NAME="streetaddress2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="streetaddress1" NEXT="streetaddress3"/>
+        <FIELD NAME="streetaddress3" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="streetaddress2" NEXT="city"/>
+        <FIELD NAME="city" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="streetaddress3" NEXT="state"/>
+        <FIELD NAME="state" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="city" NEXT="statecode"/>
+        <FIELD NAME="statecode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="state" NEXT="postalcode"/>
+        <FIELD NAME="postalcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="statecode" NEXT="country"/>
+        <FIELD NAME="country" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="postalcode" NEXT="countrycode"/>
+        <FIELD NAME="countrycode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="country" NEXT="phonenumber"/>
+        <FIELD NAME="phonenumber" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="countrycode" NEXT="plannerfirstname"/>
+        <FIELD NAME="plannerfirstname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="phonenumber" NEXT="plannerlastname"/>
+        <FIELD NAME="plannerlastname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="plannerfirstname" NEXT="planneremailaddress"/>
+        <FIELD NAME="planneremailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="plannerlastname" NEXT="rsvpbydate"/>
+        <FIELD NAME="rsvpbydate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="planneremailaddress" NEXT="closedby"/>
+        <FIELD NAME="closedby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="rsvpbydate" NEXT="lastmodifieddate"/>
+        <FIELD NAME="lastmodifieddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="closedby"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -62,35 +62,35 @@
     </TABLE>
     <TABLE NAME="enrol_cvent_registration" COMMENT="save copies of CVent Registration objects" PREVIOUS="enrol_cvent_event" NEXT="enrol_cvent_contact">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="registrationid"/>
-        <FIELD NAME="registrationid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="Registration.Id value from Cvent" PREVIOUS="id" NEXT="contactid"/>
-        <FIELD NAME="contactid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="registrationid" NEXT="inviteeid"/>
-        <FIELD NAME="inviteeid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="contactid" NEXT="sourceid"/>
-        <FIELD NAME="sourceid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="inviteeid" NEXT="firstname"/>
-        <FIELD NAME="firstname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="sourceid" NEXT="lastname"/>
-        <FIELD NAME="lastname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="firstname" NEXT="company"/>
-        <FIELD NAME="company" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="lastname" NEXT="title"/>
-        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="company" NEXT="emailaddress"/>
-        <FIELD NAME="emailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="title" NEXT="ccemailaddress"/>
-        <FIELD NAME="ccemailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="emailaddress" NEXT="workphone"/>
-        <FIELD NAME="workphone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="ccemailaddress" NEXT="eventid"/>
-        <FIELD NAME="eventid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workphone" NEXT="eventcode"/>
-        <FIELD NAME="eventcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventid" NEXT="eventtitle"/>
-        <FIELD NAME="eventtitle" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventcode" NEXT="eventstartdate"/>
-        <FIELD NAME="eventstartdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventtitle" NEXT="status"/>
-        <FIELD NAME="status" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="eventstartdate" NEXT="participant"/>
-        <FIELD NAME="participant" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="status" NEXT="credit"/>
-        <FIELD NAME="credit" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="participant" NEXT="internalnote"/>
-        <FIELD NAME="internalnote" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="credit" NEXT="invitedby"/>
-        <FIELD NAME="invitedby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="internalnote" NEXT="registrationdate"/>
-        <FIELD NAME="registrationdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="invitedby" NEXT="canceleddate"/>
-        <FIELD NAME="canceleddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="registrationdate" NEXT="originalresponsedate"/>
-        <FIELD NAME="originalresponsedate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="canceleddate" NEXT="lastmodifieddate"/>
-        <FIELD NAME="lastmodifieddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="originalresponsedate" NEXT="modifiedby"/>
-        <FIELD NAME="modifiedby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="lastmodifieddate" NEXT="responsemethod"/>
-        <FIELD NAME="responsemethod" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="modifiedby" NEXT="confirmationnumber"/>
-        <FIELD NAME="confirmationnumber" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="responsemethod" NEXT="registrationtype"/>
-        <FIELD NAME="registrationtype" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="confirmationnumber"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"  NEXT="registrationid"/>
+        <FIELD NAME="registrationid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="Registration.Id value from Cvent" PREVIOUS="id" NEXT="contactid"/>
+        <FIELD NAME="contactid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="registrationid" NEXT="inviteeid"/>
+        <FIELD NAME="inviteeid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="contactid" NEXT="sourceid"/>
+        <FIELD NAME="sourceid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="inviteeid" NEXT="firstname"/>
+        <FIELD NAME="firstname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="sourceid" NEXT="lastname"/>
+        <FIELD NAME="lastname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="firstname" NEXT="company"/>
+        <FIELD NAME="company" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="lastname" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="company" NEXT="emailaddress"/>
+        <FIELD NAME="emailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="title" NEXT="ccemailaddress"/>
+        <FIELD NAME="ccemailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="emailaddress" NEXT="workphone"/>
+        <FIELD NAME="workphone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="ccemailaddress" NEXT="eventid"/>
+        <FIELD NAME="eventid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workphone" NEXT="eventcode"/>
+        <FIELD NAME="eventcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventid" NEXT="eventtitle"/>
+        <FIELD NAME="eventtitle" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventcode" NEXT="eventstartdate"/>
+        <FIELD NAME="eventstartdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventtitle" NEXT="status"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="eventstartdate" NEXT="participant"/>
+        <FIELD NAME="participant" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"  PREVIOUS="status" NEXT="credit"/>
+        <FIELD NAME="credit" TYPE="int" LENGTH="20" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"  PREVIOUS="participant" NEXT="internalnote"/>
+        <FIELD NAME="internalnote" TYPE="text" LENGTH="big" NOTNULL="false" SEQUENCE="false"  PREVIOUS="credit" NEXT="invitedby"/>
+        <FIELD NAME="invitedby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="internalnote" NEXT="registrationdate"/>
+        <FIELD NAME="registrationdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="invitedby" NEXT="canceleddate"/>
+        <FIELD NAME="canceleddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="registrationdate" NEXT="originalresponsedate"/>
+        <FIELD NAME="originalresponsedate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="canceleddate" NEXT="lastmodifieddate"/>
+        <FIELD NAME="lastmodifieddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="originalresponsedate" NEXT="modifiedby"/>
+        <FIELD NAME="modifiedby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="lastmodifieddate" NEXT="responsemethod"/>
+        <FIELD NAME="responsemethod" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="modifiedby" NEXT="confirmationnumber"/>
+        <FIELD NAME="confirmationnumber" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="responsemethod" NEXT="registrationtype"/>
+        <FIELD NAME="registrationtype" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="confirmationnumber"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -98,61 +98,61 @@
     </TABLE>
     <TABLE NAME="enrol_cvent_contact" COMMENT="save copies of CVent Contact objects" PREVIOUS="enrol_cvent_registration" NEXT="enrol_cvent_reg_guest">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="contactid"/>
-        <FIELD NAME="contactid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="Contact.Id value from Cvent" PREVIOUS="id" NEXT="sourceid"/>
-        <FIELD NAME="sourceid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="contactid" NEXT="firstname"/>
-        <FIELD NAME="firstname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="sourceid" NEXT="lastname"/>
-        <FIELD NAME="lastname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="firstname" NEXT="emailaddress"/>
-        <FIELD NAME="emailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="lastname" NEXT="ccemailaddress"/>
-        <FIELD NAME="ccemailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="emailaddress" NEXT="company"/>
-        <FIELD NAME="company" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="ccemailaddress" NEXT="title"/>
-        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="company" NEXT="contacttype"/>
-        <FIELD NAME="contacttype" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="title" NEXT="contacttypecode"/>
-        <FIELD NAME="contacttypecode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="contacttype" NEXT="salutation"/>
-        <FIELD NAME="salutation" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="contacttypecode" NEXT="nickname"/>
-        <FIELD NAME="nickname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="salutation" NEXT="middlename"/>
-        <FIELD NAME="middlename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="nickname" NEXT="designation"/>
-        <FIELD NAME="designation" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="middlename" NEXT="active"/>
-        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="designation" NEXT="excludedfromemail"/>
-        <FIELD NAME="excludedfromemail" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="active" NEXT="lastoptoutby"/>
-        <FIELD NAME="lastoptoutby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="excludedfromemail" NEXT="lastoptoutdate"/>
-        <FIELD NAME="lastoptoutdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="lastoptoutby" NEXT="createddate"/>
-        <FIELD NAME="createddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="lastoptoutdate" NEXT="createdby"/>
-        <FIELD NAME="createdby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="createddate" NEXT="lastmodifieddate"/>
-        <FIELD NAME="lastmodifieddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="createdby" NEXT="lastmodifiedby"/>
-        <FIELD NAME="lastmodifiedby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="lastmodifieddate" NEXT="emailaddressstatus"/>
-        <FIELD NAME="emailaddressstatus" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="lastmodifiedby" NEXT="logdate"/>
-        <FIELD NAME="logdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="emailaddressstatus" NEXT="logreason"/>
-        <FIELD NAME="logreason" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="logdate" NEXT="logresponse"/>
-        <FIELD NAME="logresponse" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="logreason" NEXT="primaryaddresstype"/>
-        <FIELD NAME="primaryaddresstype" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="logresponse" NEXT="homeaddress1"/>
-        <FIELD NAME="homeaddress1" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="primaryaddresstype" NEXT="homeaddress2"/>
-        <FIELD NAME="homeaddress2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homeaddress1" NEXT="homeaddress3"/>
-        <FIELD NAME="homeaddress3" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homeaddress2" NEXT="homecity"/>
-        <FIELD NAME="homecity" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homeaddress3" NEXT="homestate"/>
-        <FIELD NAME="homestate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homecity" NEXT="homestatecode"/>
-        <FIELD NAME="homestatecode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homestate" NEXT="homepostalcode"/>
-        <FIELD NAME="homepostalcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homestatecode" NEXT="homecountry"/>
-        <FIELD NAME="homecountry" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homepostalcode" NEXT="homecountrycode"/>
-        <FIELD NAME="homecountrycode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homecountry" NEXT="homephone"/>
-        <FIELD NAME="homephone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homecountrycode" NEXT="homefax"/>
-        <FIELD NAME="homefax" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homephone" NEXT="workaddress1"/>
-        <FIELD NAME="workaddress1" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="homefax" NEXT="workaddress2"/>
-        <FIELD NAME="workaddress2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workaddress1" NEXT="workaddress3"/>
-        <FIELD NAME="workaddress3" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workaddress2" NEXT="workcity"/>
-        <FIELD NAME="workcity" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workaddress3" NEXT="workstate"/>
-        <FIELD NAME="workstate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workcity" NEXT="workstatecode"/>
-        <FIELD NAME="workstatecode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workstate" NEXT="workpostalcode"/>
-        <FIELD NAME="workpostalcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workstatecode" NEXT="workcountry"/>
-        <FIELD NAME="workcountry" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workpostalcode" NEXT="workcountrycode"/>
-        <FIELD NAME="workcountrycode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workcountry" NEXT="workphone"/>
-        <FIELD NAME="workphone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workcountrycode" NEXT="workfax"/>
-        <FIELD NAME="workfax" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workphone" NEXT="mobilephone"/>
-        <FIELD NAME="mobilephone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="workfax" NEXT="pager"/>
-        <FIELD NAME="pager" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="mobilephone" NEXT="optedin"/>
-        <FIELD NAME="optedin" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="pager" NEXT="cventid"/>
-        <FIELD NAME="cventid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="field name from CVent conflicts with Moodle conventional id field" PREVIOUS="optedin" NEXT="groupname"/>
-        <FIELD NAME="groupname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" COMMENT="value retrieved from a Cvent CustomFieldDetail sub-object" PREVIOUS="cventid"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"  NEXT="contactid"/>
+        <FIELD NAME="contactid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="Contact.Id value from Cvent" PREVIOUS="id" NEXT="sourceid"/>
+        <FIELD NAME="sourceid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="contactid" NEXT="firstname"/>
+        <FIELD NAME="firstname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="sourceid" NEXT="lastname"/>
+        <FIELD NAME="lastname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="firstname" NEXT="emailaddress"/>
+        <FIELD NAME="emailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="lastname" NEXT="ccemailaddress"/>
+        <FIELD NAME="ccemailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="emailaddress" NEXT="company"/>
+        <FIELD NAME="company" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="ccemailaddress" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="company" NEXT="contacttype"/>
+        <FIELD NAME="contacttype" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="title" NEXT="contacttypecode"/>
+        <FIELD NAME="contacttypecode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="contacttype" NEXT="salutation"/>
+        <FIELD NAME="salutation" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="contacttypecode" NEXT="nickname"/>
+        <FIELD NAME="nickname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="salutation" NEXT="middlename"/>
+        <FIELD NAME="middlename" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="nickname" NEXT="designation"/>
+        <FIELD NAME="designation" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="middlename" NEXT="active"/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"  PREVIOUS="designation" NEXT="excludedfromemail"/>
+        <FIELD NAME="excludedfromemail" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"  PREVIOUS="active" NEXT="lastoptoutby"/>
+        <FIELD NAME="lastoptoutby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="excludedfromemail" NEXT="lastoptoutdate"/>
+        <FIELD NAME="lastoptoutdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="lastoptoutby" NEXT="createddate"/>
+        <FIELD NAME="createddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="lastoptoutdate" NEXT="createdby"/>
+        <FIELD NAME="createdby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="createddate" NEXT="lastmodifieddate"/>
+        <FIELD NAME="lastmodifieddate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="createdby" NEXT="lastmodifiedby"/>
+        <FIELD NAME="lastmodifiedby" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="lastmodifieddate" NEXT="emailaddressstatus"/>
+        <FIELD NAME="emailaddressstatus" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="lastmodifiedby" NEXT="logdate"/>
+        <FIELD NAME="logdate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="emailaddressstatus" NEXT="logreason"/>
+        <FIELD NAME="logreason" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="logdate" NEXT="logresponse"/>
+        <FIELD NAME="logresponse" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="logreason" NEXT="primaryaddresstype"/>
+        <FIELD NAME="primaryaddresstype" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="logresponse" NEXT="homeaddress1"/>
+        <FIELD NAME="homeaddress1" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="primaryaddresstype" NEXT="homeaddress2"/>
+        <FIELD NAME="homeaddress2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homeaddress1" NEXT="homeaddress3"/>
+        <FIELD NAME="homeaddress3" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homeaddress2" NEXT="homecity"/>
+        <FIELD NAME="homecity" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homeaddress3" NEXT="homestate"/>
+        <FIELD NAME="homestate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homecity" NEXT="homestatecode"/>
+        <FIELD NAME="homestatecode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homestate" NEXT="homepostalcode"/>
+        <FIELD NAME="homepostalcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homestatecode" NEXT="homecountry"/>
+        <FIELD NAME="homecountry" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homepostalcode" NEXT="homecountrycode"/>
+        <FIELD NAME="homecountrycode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homecountry" NEXT="homephone"/>
+        <FIELD NAME="homephone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homecountrycode" NEXT="homefax"/>
+        <FIELD NAME="homefax" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homephone" NEXT="workaddress1"/>
+        <FIELD NAME="workaddress1" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="homefax" NEXT="workaddress2"/>
+        <FIELD NAME="workaddress2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workaddress1" NEXT="workaddress3"/>
+        <FIELD NAME="workaddress3" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workaddress2" NEXT="workcity"/>
+        <FIELD NAME="workcity" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workaddress3" NEXT="workstate"/>
+        <FIELD NAME="workstate" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workcity" NEXT="workstatecode"/>
+        <FIELD NAME="workstatecode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workstate" NEXT="workpostalcode"/>
+        <FIELD NAME="workpostalcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workstatecode" NEXT="workcountry"/>
+        <FIELD NAME="workcountry" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workpostalcode" NEXT="workcountrycode"/>
+        <FIELD NAME="workcountrycode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workcountry" NEXT="workphone"/>
+        <FIELD NAME="workphone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workcountrycode" NEXT="workfax"/>
+        <FIELD NAME="workfax" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workphone" NEXT="mobilephone"/>
+        <FIELD NAME="mobilephone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="workfax" NEXT="pager"/>
+        <FIELD NAME="pager" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="mobilephone" NEXT="optedin"/>
+        <FIELD NAME="optedin" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" SEQUENCE="false"  PREVIOUS="pager" NEXT="cventid"/>
+        <FIELD NAME="cventid" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="field name from CVent conflicts with Moodle conventional id field" PREVIOUS="optedin" NEXT="groupname"/>
+        <FIELD NAME="groupname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  COMMENT="value retrieved from a Cvent CustomFieldDetail sub-object" PREVIOUS="cventid"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -160,27 +160,27 @@
     </TABLE>
     <TABLE NAME="enrol_cvent_reg_guest" COMMENT="Registration.GuestDetail data from Cvent" PREVIOUS="enrol_cvent_contact">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="registrationid"/>
-        <FIELD NAME="registrationid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="guestid"/>
-        <FIELD NAME="guestid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" ENUM="false" PREVIOUS="registrationid" NEXT="firstname"/>
-        <FIELD NAME="firstname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="guestid" NEXT="lastname"/>
-        <FIELD NAME="lastname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="firstname" NEXT="company"/>
-        <FIELD NAME="company" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="lastname" NEXT="title"/>
-        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="company" NEXT="phone"/>
-        <FIELD NAME="phone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="title" NEXT="emailaddress"/>
-        <FIELD NAME="emailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="phone" NEXT="address1"/>
-        <FIELD NAME="address1" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="emailaddress" NEXT="address2"/>
-        <FIELD NAME="address2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="address1" NEXT="address3"/>
-        <FIELD NAME="address3" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="address2" NEXT="city"/>
-        <FIELD NAME="city" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="address3" NEXT="state"/>
-        <FIELD NAME="state" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="city" NEXT="statecode"/>
-        <FIELD NAME="statecode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="state" NEXT="postalcode"/>
-        <FIELD NAME="postalcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="statecode" NEXT="country"/>
-        <FIELD NAME="country" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="postalcode" NEXT="countrycode"/>
-        <FIELD NAME="countrycode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="country" NEXT="registrationtype"/>
-        <FIELD NAME="registrationtype" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="countrycode" NEXT="participant"/>
-        <FIELD NAME="participant" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" ENUM="false" PREVIOUS="registrationtype" NEXT="confirmationnumber"/>
-        <FIELD NAME="confirmationnumber" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" ENUM="false" PREVIOUS="participant"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true"  NEXT="registrationid"/>
+        <FIELD NAME="registrationid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"  PREVIOUS="id" NEXT="guestid"/>
+        <FIELD NAME="guestid" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"  PREVIOUS="registrationid" NEXT="firstname"/>
+        <FIELD NAME="firstname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="guestid" NEXT="lastname"/>
+        <FIELD NAME="lastname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="firstname" NEXT="company"/>
+        <FIELD NAME="company" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="lastname" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="company" NEXT="phone"/>
+        <FIELD NAME="phone" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="title" NEXT="emailaddress"/>
+        <FIELD NAME="emailaddress" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="phone" NEXT="address1"/>
+        <FIELD NAME="address1" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="emailaddress" NEXT="address2"/>
+        <FIELD NAME="address2" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="address1" NEXT="address3"/>
+        <FIELD NAME="address3" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="address2" NEXT="city"/>
+        <FIELD NAME="city" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="address3" NEXT="state"/>
+        <FIELD NAME="state" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="city" NEXT="statecode"/>
+        <FIELD NAME="statecode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="state" NEXT="postalcode"/>
+        <FIELD NAME="postalcode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="statecode" NEXT="country"/>
+        <FIELD NAME="country" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="postalcode" NEXT="countrycode"/>
+        <FIELD NAME="countrycode" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="country" NEXT="registrationtype"/>
+        <FIELD NAME="registrationtype" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="countrycode" NEXT="participant"/>
+        <FIELD NAME="participant" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"  PREVIOUS="registrationtype" NEXT="confirmationnumber"/>
+        <FIELD NAME="confirmationnumber" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false"  PREVIOUS="participant"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
