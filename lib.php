@@ -54,7 +54,7 @@ class enrol_cvent_plugin extends enrol_plugin {
                 }
             }
         }
-        if ($guestings = $DB->get_records_sql("SELECT g.* FROM {enrol_cvent_registration_guest} g JOIN {enrol_cvent_registration} r ON r.registrationid = g.registrationid WHERE g.emailaddress = ? AND r.status = ?", array($user->username, CV_ACCEPTED))) {
+        if ($guestings = $DB->get_records_sql("SELECT g.* FROM {enrol_cvent_reg_guest} g JOIN {enrol_cvent_registration} r ON r.registrationid = g.registrationid WHERE g.emailaddress = ? AND r.status = ?", array($user->username, CV_ACCEPTED))) {
             # Ensure enrollment for each course where this user is a Cvent-guest.
             foreach ($guestings as $guesting) {
                 if ($courseid = $this->ensure_enrolment($guesting->registrationid, $user)) {
@@ -72,7 +72,7 @@ class enrol_cvent_plugin extends enrol_plugin {
         $rs = $DB->get_recordset_sql($sql, array('userid' => $user->id, 'plugin' => CV_NAME));
         foreach ($rs as $instance) {
             if (!$context = get_context_instance(CONTEXT_COURSE, $instance->courseid)) {
-                //weird
+                // weird...
                 continue;
             }
 
@@ -81,7 +81,7 @@ class enrol_cvent_plugin extends enrol_plugin {
                 continue;
             }
 
-            // deal with enrolments removed from external table
+            // deal with enrolments removed from Cvent
             if ($unenrolaction == ENROL_EXT_REMOVED_UNENROL) {
                 // unenrol
                 $this->unenrol_user($instance, $user->id);
@@ -567,13 +567,13 @@ class enrol_cvent_plugin extends enrol_plugin {
                     }
                 }
             }
-            if ($rec = $DB->get_record('enrol_cvent_registration_guest', array('guestid' => $guestdetail->guestid))) {
+            if ($rec = $DB->get_record('enrol_cvent_reg_guest', array('guestid' => $guestdetail->guestid))) {
                 $guestdetail->id = $rec->id;
                 cvent_safe_print("Updating guestdetail ($guestdetail->guestid)<br />\n");
-                $DB->update_record('enrol_cvent_registration_guest', $guestdetail);
+                $DB->update_record('enrol_cvent_reg_guest', $guestdetail);
             } else {
                 cvent_safe_print("Inserting guestdetail ($guestdetail->guestid)<br />\n");
-                $DB->insert_record('enrol_cvent_registration_guest', $guestdetail);
+                $DB->insert_record('enrol_cvent_reg_guest', $guestdetail);
             }
             $guestdetail->homeaddress1 = $guestdetail->address1;
             $guestdetail->homecity = $guestdetail->city;
