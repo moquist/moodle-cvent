@@ -181,7 +181,9 @@ class enrol_cvent_plugin extends enrol_plugin {
             cvent_safe_print("Auto-creating course \"$event->eventtitle\" with EventCode $event->eventcode<br />\n");
             $course = create_course((object)array(
                 'fullname' => $event->eventtitle,
-                'shortname' => substr($event->eventtitle, 0, 100),
+                # Duplicate eventtitles in CVent cause course creation to 
+                # fail... just don't set shortname for now.
+                #'shortname' => substr($event->eventtitle, 0, 100),
                 'idnumber' => $event->eventcode,
                 'startdate' => strtotime($event->eventstartdate),
                 'category' => $categoryid,
