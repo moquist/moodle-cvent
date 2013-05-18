@@ -46,16 +46,7 @@ Synchronizing:
     than 8-12 Cvent API calls, unless you have more than 10k updates in between two
     runs of this script.
 
-Testing:
-    Just to be sure the basic connection works, you can execute the following on
-    the command line:
-        php enrol/cvent/cli/test.php 
-
-    Without any arguments, that script will just attempt to make a connection to
-    Cvent. The script will tell you whether the connection was successful.
-
-    test.php can do other things, too, and it's intended that developers will
-    monkey with it as needed for debugging.
+    CLI: Execute php enrol/cvent/cli/sync.php
 
 TODO:
     * add configuration settings that determine how user provisioning works
@@ -64,4 +55,4 @@ TODO:
     * document how user provisioning and enrollment handling work
 
 Matt Oquist <moquist@majen.net>
-Sat Mar 10 14:39:33 EST 2012
+Updated Sat May 18 15:23:37 EDT 2013
