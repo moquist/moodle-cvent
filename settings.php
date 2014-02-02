@@ -37,7 +37,6 @@ if ($ADMIN->fulltree) {
     //--- enrol instance defaults ----------------------------------------------------------------------------
     $settings->add(new admin_setting_heading('cvent_heading',
         get_string('server_settings', 'enrol_cvent'), get_string('view_stats', 'enrol_cvent', "$CFG->wwwroot/enrol/cvent/viewstats.php")));
-        #'waka1', 'waka2'));
 
     $settings->add(new admin_setting_configtext('enrol_cvent/account_number',
         get_string('account_number', 'enrol_cvent'), get_string('account_number_desc', 'enrol_cvent'), '', PARAM_ALPHANUM));

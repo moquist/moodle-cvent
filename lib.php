@@ -578,7 +578,8 @@ class enrol_cvent_plugin extends enrol_plugin {
                 $DB->insert_record('enrol_cvent_reg_guest', $guestdetail);
             }
             $guestdetail->homeaddress1 = $guestdetail->address1;
-            $guestdetail->homecity = $guestdetail->city;
+            $guestdetail->homecity = $guestdetail->state;
+            $guestdetail->homestate = $guestdetail->state;
             $guestdetail->homecountrycode = $guestdetail->countrycode;
             $user = cvent_ensure_user($guestdetail);
             # The enrolment will be handled later by setup_enrolments()
@@ -731,7 +732,7 @@ function cvent_ensure_user($contact) {
         'email' => substr($contact->emailaddress, 0, 100),
         'lang' => 'en_utf8', # default can be changed by user
         'address' => substr($contact->homeaddress1, 0, 70),
-        'city' => substr($contact->homecity, 0, 120),
+        'city' => substr(cvent_citystate_str($contact->homecity, $contact->homestate), 0, 120),
         'country' => substr($contact->homecountrycode, 0, 2),
         'idnumber' => isset($contact->contactid) ? $contact->contactid : '',
     );
@@ -749,6 +750,16 @@ function cvent_ensure_user($contact) {
         ));
     }
     return $user;
+}
+
+/**
+ * Create a "City, State" string for Moodle's user.city field.
+ */
+function cvent_citystate_str ($city, $state) {
+    if (isset($state) and strlen($state)) {
+        return "$city, $state";
+    }
+    return $city;
 }
 
 /**
