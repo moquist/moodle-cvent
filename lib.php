@@ -99,7 +99,7 @@ class enrol_cvent_plugin extends enrol_plugin {
                 }
             }
         }
-        return true;
+        return count(array_keys($enrols));
     }
 
     /**
@@ -128,8 +128,9 @@ class enrol_cvent_plugin extends enrol_plugin {
 
             # TODO: make this faster and more efficient
             foreach ($DB->get_records('user') as $user) {
-                cvent_safe_print(get_string('setup_enrolments', 'enrol_cvent', $user->username));
-                $this->sync_user_enrolments($user);
+                cvent_safe_print(get_string('set_up_enrolments', 'enrol_cvent', $user->username));
+                $count = $this->sync_user_enrolments($user);
+                cvent_safe_print(get_string('count', 'enrol_cvent', $count));
             }
         } catch (Exception $e) {
             cvent_safe_print("Exception SOAP info: " . $this->get_soap_trace() . "<br />\n");
