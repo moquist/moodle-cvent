@@ -80,5 +80,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('enrol_cvent/cron_frequency',
         get_string('cron_frequency', 'enrol_cvent'), get_string('cron_frequency_desc', 'enrol_cvent'), 0, PARAM_INT));
 
+    $settings->add(new admin_setting_configcheckbox('enrol_cvent/verbose',
+        get_string('verbose', 'enrol_cvent'), get_string('verbose_desc', 'enrol_cvent'), 0));
 }
 
