@@ -38,6 +38,7 @@ class enrol_cvent_plugin extends enrol_plugin {
      * For the given user, look in the Cvent data pile for an authoritative list
      * of enrolments, and then adjust the local Moodle assignments to match.
      * TODO: remove old enrollments
+     *
      */
     public function sync_user_enrolments($user) {
         global $DB;
@@ -231,7 +232,6 @@ class enrol_cvent_plugin extends enrol_plugin {
      */
     private function ensure_enrolment($registrationid, $user) {
         global $CFG, $DB;
-        static $instances;
 
         static $registrations = array();
         if (!isset($registrations[$registrationid])) {
@@ -246,7 +246,7 @@ class enrol_cvent_plugin extends enrol_plugin {
         $event = $events[$reg->eventid];
 
         # Bail out now if the course doesn't exist yet.
-        if (!$course = $DB->get_record('course', array('idnumber' => $event->eventcode))) {
+        if (!$course = cvent_course_memoized($event->eventcode)) {
             # The course hasn't been created yet, just fail.
             return false;
         }
@@ -254,7 +254,7 @@ class enrol_cvent_plugin extends enrol_plugin {
         # Bail out now if the event is too far in the future.
         # Just ignore event->timezone. We have no idea from Cvent's spec what
         # to expect in there.
-        if (time() < (strtotime($event->eventstartdate) - ($this->get_config('enrol_daysbefore', CV_DEFAULT_ENROL_DAYSBEFORE) * 24 * 60 * 60))) {
+        if (time() < (strtotime($event->eventstartdate) - $this->daysbefore_memoized())) {
             # We aren't yet within enrol_daysbefore of the event
             return false;
         }
@@ -262,40 +262,19 @@ class enrol_cvent_plugin extends enrol_plugin {
         # Bail out now if the event is too far in the past.
         # Just ignore event->timezone. We have no idea from Cvent's spec what
         # to expect in there.
-        if (time() > (strtotime($event->eventenddate) + ($this->get_config('enrol_daysafter', CV_DEFAULT_ENROL_DAYSAFTER) * 24 * 60 * 60))) {
+        if (time() > (strtotime($event->eventenddate) + $this->daysafter_memoized())) {
             # We aren't still within enrol_daysafter of the event
             return false;
         }
 
-        if (!isset($instances[$course->id])) {
-            if ($instance = $DB->get_record('enrol', array('courseid'=>$course->id, 'enrol'=>CV_NAME), '*', IGNORE_MULTIPLE)) {
-                $instances[$course->id] = $instance;
-            } else {
-                $enrolid = $this->add_instance($course);
-                $instances[$course->id] = $DB->get_record('enrol', array('id'=>$enrolid));
-            }
-        }
-        $instance = $instances[$course->id];
-
-        static $contacts = array();
-        if (!isset($contacts[$reg->contactid])) {
-            $contacts[$reg->contactid] = $DB->get_record('enrol_cvent_contact', array('contactid' => $reg->contactid));
-        }
-        $contact = $contacts[$reg->contactid];
+        $instance = $this->einstances_memoized($course);
+        $contact = cvent_contact_memoized($reg->contactid);
 
         $groupname = $this->generate_groupname($contact);
         $groupid = $this->ensure_course_group($course, $groupname);
         groups_add_member($groupid, $user->id);
 
-        # We can't use the regular handling of the default value, because the 
-        # actual default value is stored in the DB.
-        if (!strlen($this->get_config('roleid'))) {
-            $role = get_archetype_roles(CV_DEFAULT_ROLE);
-            $role = reset($role);
-            $roleid = $role->id;
-        } else {
-            $roleid = $this->get_config('roleid');
-        }
+        $roleid = $this->roleid_memoized();
         if ($e = $DB->get_record('user_enrolments', array('userid'=>$user->id, 'enrolid'=>$instance->id))) {
             // reenable enrolment when previously disabled enrolment refreshed
             if ($e->status == ENROL_USER_SUSPENDED) {
@@ -305,29 +284,6 @@ class enrol_cvent_plugin extends enrol_plugin {
             $this->enrol_user($instance, $user->id, $roleid);
         }
         return $course->id;
-
-        #if (!$context = get_context_instance(CONTEXT_COURSE, $course->id)) {
-        #    throw new Exception("Missing course context instance");
-        #    return;
-        #}
-
-        #$current = $DB->get_records('role_assignments', array('contextid'=>$context->id, 'userid'=>$user->id, 'component'=>'enrol_'.CV_NAME, 'itemid'=>$instance->id), '', 'id, roleid');
-
-        #if (!$existing = $DB->get_records('role_assignments', array('userid' => $user->id))) {
-        #    $existing = array();
-        #}
-
-        #// Search the role assignments to see if this user
-        #// already has a role in this context.  If so, we're done.
-        #foreach($existing as $key => $role_assignment) {
-        #    if ($role_assignment->contextid == $context->id) {
-        #            // User is already enroled in course
-        #            # ... but as a what?
-        #            return;
-        #        }
-        #}
-
-        #return role_assign($role->id, $user->id, 0, $context->id, 0, 0, 0, 'cvent');
     }
 
     /**
@@ -709,6 +665,54 @@ class enrol_cvent_plugin extends enrol_plugin {
         $this->set_config('lastcron', $now);
     }
 
+    function daysbefore_memoized() {
+        static $daysbefore = 0;
+        if (!$daysbefore) {
+            $daysbefore = ($this->get_config('enrol_daysbefore', CV_DEFAULT_ENROL_DAYSBEFORE) * 24 * 60 * 60);
+        }
+        return $daysbefore;
+    }
+
+    function daysafter_memoized() {
+        static $daysafter = 0;
+        if (!$daysafter) {
+            $daysafter = ($this->get_config('enrol_daysafter', CV_DEFAULT_ENROL_DAYSAFTER) * 24 * 60 * 60);
+        }
+        return $daysafter;
+    }
+
+    function einstances_memoized($course) {
+        global $DB;
+        static $instances;
+        if (!isset($instances[$course->id])) {
+            if ($instance = $DB->get_record('enrol', array('courseid'=>$course->id, 'enrol'=>CV_NAME), '*', IGNORE_MULTIPLE)) {
+                $instances[$course->id] = $instance;
+            } else {
+                $enrolid = $this->add_instance($course);
+                $instances[$course->id] = $DB->get_record('enrol', array('id'=>$enrolid));
+            }
+        }
+        return $instances[$course->id];
+    }
+
+    function roleid_memoized() {
+        # We can't use the regular handling of the default value, because the 
+        # actual default value is stored in the DB.
+        static $roleid = null;
+
+        if (is_null($roleid)) {
+            $conf = $this->get_config('roleid');
+            if (strlen($conf)) {
+                $roleid = $conf;
+            } else {
+                $role = get_archetype_roles(CV_DEFAULT_ROLE);
+                $role = reset($role);
+                $roleid = $role->id;
+            }
+        }
+        return $roleid;
+    }
+
 } // end of class
 
 /**
@@ -771,6 +775,10 @@ function cvent_citystate_str ($city, $state) {
  * @param $str The string to be printed somewhere.
  */
 function cvent_safe_print($str) {
+    if (!cvent_verbose_memoized()) {
+        return;
+    }
+
     if (CLI_SCRIPT) {
         print $str;
     } else {
@@ -798,6 +806,32 @@ function cvent_force_sync($latestupdate) {
         print "<p><big><big><a target=\"_blank\" href=\"$CFG->wwwroot/enrol/cvent/viewstats.php\">(" . get_string('clicktoseelogafter', 'enrol_cvent') . ")</a></big></big></p>";
     }
     $enrol->sync_enrolments($latestupdate);
+}
+
+function cvent_course_memoized($idnumber) {
+    global $DB;
+    static $courses = array();
+    if (!isset($courses[$idnumber])) {
+        $courses[$idnumber] = $DB->get_record('course', array('idnumber' => $idnumber));
+    }
+    return $courses[$idnumber];
+}
+
+function cvent_contact_memoized($contactid) {
+    global $DB;
+    static $contacts = array();
+    if (!isset($contacts[$contactid])) {
+        $contacts[$contactid] = $DB->get_record('enrol_cvent_contact', array('contactid' => $contactid));
+    }
+    return $contacts[$contactid];
+}
+
+function cvent_verbose_memoized() {
+    static $verbose = null;
+    if (is_null($verbose)) {
+        $verbose = get_config('enrol_cvent', 'verbose');
+    }
+    return $verbose;
 }
 
 ?>
