@@ -25,6 +25,8 @@ $string['autocreate_category'] = "Auto-create course category";
 $string['autocreate_category_desc'] = "The category for auto-created courses.";
 $string['cron_frequency'] = "Cron delay";
 $string['cron_frequency_desc'] = "The minimum number of minutes to wait before synchronizations with Cvent. Moodle cron must be configured for this to work. Enter '0' or leave blank to disable synchronization via Moodle cron.";
+$string['verbose'] = "Verbose";
+$string['verbose_desc'] = "Enabling verbosity increases the amount of output seen from CLI/cron scripts.";
 
 $string['enrol_cvent_autocreate_header'] = "Auto-creation of new courses";
 $string['INVALID_LOGIN'] = "Cvent returned 'INVALID_LOGIN'. Please check your configured Cvent account number, username, and password.\n";
