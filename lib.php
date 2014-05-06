@@ -217,6 +217,11 @@ class enrol_cvent_plugin extends enrol_plugin {
         return $ids[$key];
     }
 
+    /*
+     * TODO: Fix this, it's broken.
+     * This is putting single users who enter group names into groups-of-one, 
+     * and true groups which happen not to have names into the 'default' group.
+     */
     private function generate_groupname($contact) {
         if (isset($contact->groupname) and strlen($contact->groupname)) {
             return get_string('group') . ": $contact->lastname, $contact->firstname ($contact->contactid)";
