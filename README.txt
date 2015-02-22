@@ -50,8 +50,8 @@ Synchronizing:
     This plugin uses Moodle's cron() feature to synchronize regularly.
 
     Each execution of the cron() for this enrolment plugin should use no more
-    than 8-12 Cvent API calls, unless you have more than 10k updates in between two
-    runs of this script.
+    than 8-12 Cvent API calls, unless you have more than 10k updates in between
+    two runs of this script.
 
     CLI: Execute php enrol/cvent/cli/sync.php
 
