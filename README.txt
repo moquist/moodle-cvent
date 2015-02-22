@@ -1,7 +1,7 @@
 Moodle-Cvent
 
 Sponsored by:
-    United States Baha'i National Center: http://tab.usbnc.org
+    United States Baha'i National Center: http://american.bahai.us/
 
 Supported Moodle versions:
     * 2.0+
@@ -27,9 +27,16 @@ Installation:
     http://yourmoodle.tld/admin/settings.php?section=manageenrols to enable the
     Cvent module and configure its settings.
 
-    You MUST be a Cvent customer with access to their API service, because in
-    the settings page you'll need to enter the authentication information
-    (username, account number, and password) they give you for their API.
+    You MUST be a Cvent customer with access to their API service, because:
+    
+    1. in the settings page you'll need to enter the authentication information
+       (username, account number, and password) they give you for their API, and
+    2. you must contact Cvent (or use their administration panel) and give them
+       your server's IP address so they can add it to their whitelist.
+
+    If you have any authentication errors (such as "INVALID_LOGIN"), please be
+    sure both of these things have been done.
+
 
 Dependencies:
     You must have the PHP xmlrpc and curl libraries installed on your system.
